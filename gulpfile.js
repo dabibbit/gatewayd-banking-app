@@ -44,22 +44,6 @@ var flags = require('minimist')(process.argv.slice(2));
 var plumber = require('gulp-plumber');
 var debug = require('gulp-debug');
 
-// prod build
-var tar = require('gulp-tar');
-var gzip = require('gulp-gzip');
-
-// server deploy
-var rsync = require('gulp-rsync');
-var gulpSSH = require('gulp-ssh')({
-  ignoreErrors: false,
-  sshConfig: {
-    host: 'gatewayd.org',
-    username: 'ubuntu',
-    privateKey: require('fs').readFileSync('/Users/haroun/.ssh/id_rsa'),
-    passphrase: getSecret('passPhrase')
-  }
-});
-
 // message formatting
 var error = chalk.bold.red;
 var warning = chalk.bold.yellow;
@@ -75,6 +59,43 @@ var logBanner = function(message) {
     return '====================\n';
   }
 };
+
+// prod build
+var tar = require('gulp-tar');
+var gzip = require('gulp-gzip');
+
+// server deploy
+var rsync = require('gulp-rsync');
+var gulpSSH = (function() {
+  var config = {
+    ignoreErrors: false,
+    sshConfig: {
+      host: getSecret('hostName'),
+      username: getSecret('userName'),
+      privateKey: require('fs').readFileSync(getSecret('sshKeyPath')),
+      passphrase: getSecret('passPhrase')
+    }
+  };
+
+  var isValid = function(obj) {
+    return _.reduce(obj.sshConfig, function(accumulator, value, key) {
+
+      if (!accumulator) {
+        return false;
+      }
+
+      return accumulator && !_.isEmpty(value);
+    }, true);
+  };
+
+  if (!isValid(config)) {
+    console.log(error("Your secret key configuration is invalid. You will not be able to deploy"));
+
+    return null;
+  }
+
+  return require('gulp-ssh')(config);
+})();
 
 // environment flags
 var isProduction = flags.production || false;
@@ -377,12 +398,15 @@ gulp.task('connect', function() {
 gulp.task('watch', function() {
   livereload.listen();
 
-  gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.html, ['copy']);
-  gulp.watch(paths.js, ['js']);
-  gulp.watch(paths.jsx, ['js']);
-  gulp.watch(paths.json, ['js']);
-  gulp.watch(paths.dist + '**/*.{html,css,js}').on('change', function() {
+  //gulp watch uses 'gaze' - paths must be relative
+  //let's address this later
+
+  gulp.watch('./app/styles/**/*.scss', ['sass']);
+  gulp.watch('./app/*.html', ['copy']);
+  gulp.watch('./app/scripts/**/*.js', ['js']);
+  gulp.watch('./app/scripts/**/*.jsx', ['js']);
+  gulp.watch('./app/scripts/**/*.json', ['js']);
+  gulp.watch('./dist/' + '**/*.{html,css,js}').on('change', function() {
     console.log(info("watch"), arguments);
     livereload.changed();
   });
