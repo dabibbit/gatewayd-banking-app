@@ -77,3 +77,20 @@ _* If admin@example.com does not work as the username, check_ **/config/config.j
     ```
     /app/scripts/main.jsx
     ```
+9. BETA FEATURE - USE WITH CAUTION:
+Added to the gulpfile are new deploy scripts. These are for convenience
+and have little or no safety checks. It is easy to overwrite your server
+using this! Its use requires a secrets.json file at the root of your
+project to be configured:
+```
+{
+"userName": "myUserName",
+"hostName": "myHostName",
+"passPhrase": "some string which is your passphrase"
+}
+```
+
+This can be reconfigured for your particular use. Please remember to
+never commit or share your private information.
+
+"npm run deploy" and "npm run rollback" are the possible commands.
