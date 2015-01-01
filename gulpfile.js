@@ -67,7 +67,19 @@ var gzip = require('gulp-gzip');
 // server deploy
 var rsync = require('gulp-rsync');
 var gulpSSH = (function() {
-  var config = {
+  var sshKeyPath = getSecret('sshKeyPath') || '',
+      config, errorMessage;
+
+  errorMessage = function() {
+    console.log(error("Your secret key configuration is invalid. You will not be able to deploy"));
+  };
+
+  if (!fs.existsSync(sshKeyPath)) {
+    errorMessage();
+    return false;
+  }
+
+  config = {
     ignoreErrors: false,
     sshConfig: {
       host: getSecret('hostName'),
@@ -89,8 +101,7 @@ var gulpSSH = (function() {
   };
 
   if (!isValid(config)) {
-    console.log(error("Your secret key configuration is invalid. You will not be able to deploy"));
-
+    errorMessage();
     return null;
   }
 
