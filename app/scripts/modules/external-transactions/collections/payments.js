@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
@@ -39,11 +40,11 @@ var Payments = Backbone.Collection.extend({
 
   urlObject: {
     "payments": {
-      "path":"/v1/external_transactions",
+      "path": "v1/external_transactions",
       "method": "get"
     },
     "flagAsDone": {
-      "path":"/v1/external_transactions/",
+      "path": "v1/external_transactions",
       "method": "save"
     }
   },
@@ -55,7 +56,7 @@ var Payments = Backbone.Collection.extend({
       return false;
     }
 
-    this.url = session.get('gatewaydUrl') + this.urlObject[page].path;
+    this.url = path.join(session.get('gatewaydUrl'), this.urlObject[page].path);
     this.httpMethod = this.urlObject[page].method;
 
     this.fetchExternalTransactions();
@@ -68,8 +69,8 @@ var Payments = Backbone.Collection.extend({
       status: 'cleared'
     });
 
-    model.save('status', 'cleared', {
-      url: session.get('gatewaydUrl') + this.urlObject.flagAsDone.path + id,
+    model.save(null, {
+      url: path.join(session.get('gatewaydUrl'), this.urlObject.flagAsDone.path, id.toString()),
       beforeSend: function(xhr) {
         xhr.setRequestHeader('Authorization', session.get('credentials'));
       }
@@ -77,13 +78,8 @@ var Payments = Backbone.Collection.extend({
   },
 
   fetchExternalTransactions: function() {
-    var _this = this;
-
-    // array of current transaction ids
-    var ids = _.pluck(this.models, 'id');
-
     if (_.isUndefined(this.url)) {
-      this.url = session.get('gatewaydUrl') + this.urlObject.payments.path;
+      this.url = path.join(session.get('gatewaydUrl'), this.urlObject.payments.path);
     }
 
     this.fetch({

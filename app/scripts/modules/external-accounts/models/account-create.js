@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
 var RippleName = require('ripple-name');
@@ -14,8 +15,8 @@ Backbone.$ = $;
 var Account = Backbone.Model.extend({
   defaults: {
     name: '',
-    address: '',
-    uid: '',
+    address: '', // federation address
+    uid: '', // bank account number
     type: '', // customer/gateway
     data: ''
   },
@@ -62,7 +63,7 @@ var Account = Backbone.Model.extend({
 
   createAccount: function() {
     this.save(null, {
-      url: session.get('gatewaydUrl') + '/v1/external_accounts',
+      url: path.join(session.get('gatewaydUrl'), 'v1/external_accounts'),
       contentType: 'application/json',
       headers: {
         Authorization: session.get('credentials')

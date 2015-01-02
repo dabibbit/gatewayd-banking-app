@@ -13,11 +13,11 @@ var NavSecondary = React.createClass({
     return {
       links: [{
         text: 'Withdrawals',
-        href: '/payments/withdrawals/queued'
+        href: '/transactions/withdrawals/queued'
       },
       {
         text: 'Deposits',
-        href: '/payments/deposits/queued'
+        href: '/transactions/deposits/queued'
       }],
       wrapperClassName: 'foo',
       navLinksClassName: 'nav-secondary'

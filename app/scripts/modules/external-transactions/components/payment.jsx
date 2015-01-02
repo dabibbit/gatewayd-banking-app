@@ -64,30 +64,33 @@ var Payment = React.createClass({
     }
 
     return (
-
-
       <li className={"payment-item list-group-item " + paymentItemClasses} ref="container">
         <div className="row">
-          <div className="col-xs-3">
+          <div className="col-sm-3 col-xs-12">
             <p>
               <span className="header">Id: </span>
               <span className="data">{this.props.model.get('id')} </span>
             </p>
           </div>
-          <div className="col-xs-3">
+          <div className="col-sm-3 col-xs-12">
             <p>
-              <span className="header">Destination Account Id: </span>
-              <span className="data">{this.props.model.get('destination_account_id')} </span>
+              <span className="header">Destination Account: </span>
+              <span className="data">
+                {
+                  this.props.model.get('toAccount') ?
+                    this.props.model.get('toAccount').name : null
+                }
+              </span>
             </p>
           </div>
-          <div className="col-xs-3 text-right">
+          <div className="col-sm-3 col-xs-12 text-right">
             <p>
               <span className="header">Amount: </span>
               <span className="data">{this.props.model.get('destination_amount')} </span>
               <span className="currency">{this.props.model.get('destination_currency')}</span>
             </p>
           </div>
-          <div className="col-xs-3 text-right">
+          <div className="col-sm-3 col-xs-12 text-right">
             <p>
               <span className="header">Status: </span>
               <span className="data">{this.props.model.get('status')} </span>

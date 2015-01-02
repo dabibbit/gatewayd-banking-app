@@ -16,13 +16,13 @@ var Link = require('react-router').Link;
 // React Bootstrap
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
 
-var accountActions = require('../actions.js');
+var accountActions = require('../actions');
 var AccountItem = require('./account.jsx');
 
-var Collection = require('../collections/accounts.js');
+var Collection = require('../collections/accounts');
 var collection = new Collection();
 
-var AccountCreateFormModel = require('../models/account-create.js');
+var AccountCreateFormModel = require('../models/account-create');
 var accountCreateFormModel = new AccountCreateFormModel();
 var AccountCreateForm = require('./account-create.jsx');
 

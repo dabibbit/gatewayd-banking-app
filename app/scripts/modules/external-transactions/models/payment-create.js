@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
 var RippleName = require('ripple-name');
@@ -21,7 +22,7 @@ var Payment = Backbone.Model.extend({
     destination_currency: '',
     deposit: true, // always true
     external_account_id: 1, // why is this required?
-    // status: '',
+    status: 'queued', // always starts off queued
     // ripple_transaction_id: 0,
     // uid: '',
     // data: '',
@@ -53,6 +54,9 @@ var Payment = Backbone.Model.extend({
     },
     external_account_id: {
       validators: ['isRequired', 'isNumber']
+    },
+    status: {
+      validators: ['isString', 'minLength:1']
     },
     ripple_transaction_id: {
       validators: ['isNumber']
@@ -95,7 +99,7 @@ var Payment = Backbone.Model.extend({
 
   sendPayment: function() {
     this.save(null, {
-      url: session.get('gatewaydUrl') + '/v1/external_transactions',
+      url: path.join(session.get('gatewaydUrl'), 'v1/external_transactions'),
       contentType: 'application/json',
       headers: {
         Authorization: session.get('credentials')

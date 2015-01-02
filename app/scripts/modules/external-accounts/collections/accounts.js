@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
@@ -38,7 +39,7 @@ var Accounts = Backbone.Collection.extend({
 
   urlObject: {
     "accounts": {
-      "path":"/v1/external_accounts",
+      "path": "v1/external_accounts",
       "method": "get"
     }
   },
@@ -50,18 +51,13 @@ var Accounts = Backbone.Collection.extend({
       return false;
     }
 
-    this.url = session.get('gatewaydUrl') + this.urlObject[page].path;
+    this.url = path.join(session.get('gatewaydUrl'), this.urlObject[page].path);
     this.httpMethod = this.urlObject[page].method;
 
     this.fetchExternalAccounts();
   },
 
   fetchExternalAccounts: function() {
-    var _this = this;
-
-    // array of current account ids
-    var ids = _.pluck(this.models, 'id');
-
     this.fetch({
       headers: {
         Authorization: session.get('credentials')

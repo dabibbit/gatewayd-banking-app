@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
 var heartbeats = require('heartbeats');
@@ -27,13 +28,15 @@ var Payment = Backbone.Model.extend({
     destination_amount: 0.0,
     destination_currency: '',
     deposit: true,
-    external_account_id: 0,
+    // external_account_id: 0,
     status: '',
     ripple_transaction_id: 0,
     uid: '',
     data: '',
     invoice_id: '',
-    memos: ''
+    memos: '',
+    toAccount: {},
+    fromAccount: {}
   },
 
   validationRules: {
@@ -110,7 +113,7 @@ var Payment = Backbone.Model.extend({
 
   pollStatusHelper: function() {
     this.fetch({
-      url: session.get('gatewaydUrl') + '/v1/external_transactions/' + this.get('id'),
+      url: path.join(session.get('gatewaydUrl'), 'v1/external_transactions', this.get('id').toString()),
       dataType: 'json',
       contentType: 'application/json',
       headers: {

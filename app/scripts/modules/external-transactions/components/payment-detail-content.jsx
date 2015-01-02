@@ -21,48 +21,43 @@ var PaymentDetailContent = React.createClass({
         </div>
         <br />
         <div className="row">
-          UID: {this.props.model.get('uid')}
-        </div>
-        <br />
-        <div className="row">
-          <div className="col-sm-4 col-xs-12">
-            Source Account Id: {this.props.model.get('source_account_id')}
+          <div className="col-sm-6 col-xs-12">
+            Source Account: {
+              this.props.model.get('fromAccount') ?
+                this.props.model.get('fromAccount').name + ' - ' + this.props.model.get('fromAccount').address
+                : null
+            }
           </div>
           <div className="col-sm-4 col-xs-12">
             Amount: {this.props.model.get('source_amount')}
           </div>
-          <div className="col-sm-4 col-xs-12">
+          <div className="col-sm-3 col-xs-12 text-right">
             Currency: {this.props.model.get('source_currency')}
           </div>
         </div>
         <br />
         <div className="row">
-          <div className="col-sm-4 col-xs-12">
-            Destination Account Id: {this.props.model.get('destination_account_id')}
+          <div className="col-sm-6 col-xs-12">
+            Destination Account: {
+              this.props.model.get('toAccount') ?
+                this.props.model.get('toAccount').name + ' - ' + this.props.model.get('toAccount').address
+                : null
+            }
           </div>
           <div className="col-sm-4 col-xs-12">
             Amount: {this.props.model.get('destination_amount')}
           </div>
-          <div className="col-sm-4 col-xs-12">
+          <div className="col-sm-3 col-xs-12 text-right">
             Currency: {this.props.model.get('destination_currency')}
           </div>
         </div>
         <br />
         <div className="row">
-          <div className="col-sm-6 col-xs-12">
-            External Account Id: {this.props.model.get('external_account_id')}
-          </div>
-          <div className="col-sm-6 col-xs-12">
-            Ripple Transaction Id: {this.props.model.get('ripple_transaction_id')}
-          </div>
+          Ripple Transaction Id: {this.props.model.get('ripple_transaction_id') || 'none'}
         </div>
         <br />
         <div className="row">
           Invoice Id: {this.props.model.get('invoice_id') || 'none'}
-        </div>
-        <br />
-        <div className="row">
-          Data: {this.props.model.get('data') || 'none'}
         </div>
         <br />
         <div className="row">

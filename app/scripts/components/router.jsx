@@ -49,7 +49,7 @@ var routes = (
     <DefaultRoute handler={SessionComponent} />
     <Route name="login" handler={SessionComponent} />
     <Route name="logout" handler={SessionComponent} />
-    <Route name="payments" path="payments/:paymentType/:state" handler={ExternalTransactions} />
+    <Route name="transactions" path="transactions/:transactionType/:state" handler={ExternalTransactions} />
     <Route name="accounts" path="accounts/:accountType" handler={ExternalAccounts} />
     <Route name="notFound" handler={NotFound} />
     <NotFoundRoute handler={NotFound} />

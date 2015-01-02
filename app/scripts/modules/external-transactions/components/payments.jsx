@@ -16,10 +16,10 @@ var Link = require('react-router').Link;
 // React Bootstrap
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
 
-var paymentActions = require('../actions.js');
+var paymentActions = require('../actions');
 var PaymentItem = require('./payment.jsx');
 
-var Collection = require('../collections/payments.js');
+var Collection = require('../collections/payments');
 var collection = new Collection();
 
 var PaymentCreateFormModel = require('../models/payment-create.js');
@@ -64,25 +64,25 @@ var Payments = React.createClass({
     }
   },
 
-  createTitle: function(paymentType) {
-    paymentType = paymentType || 'Deposits';
+  createTitle: function(transactionType) {
+    transactionType = transactionType || 'Deposits';
 
     var titleMap = {
       deposits: 'Deposits',
       withdrawals: 'Withdrawals'
     };
 
-    return titleMap[paymentType];
+    return titleMap[transactionType];
   },
 
-  paymentTypeMap: {
+  transactionTypeMap: {
     deposits: true,
     withdrawals: false
   },
 
   render: function() {
     var _this = this,
-        paymentType = this.getParams().paymentType,
+        transactionType = this.getParams().transactionType,
         state = this.getParams().state,
         tertiaryNav;
 
@@ -90,7 +90,7 @@ var Payments = React.createClass({
     // We could keep different collections for each type, but it depends on use case.
     var paymentItems = this.state.payments.chain()
       .filter(function(model) {
-        return model.get('deposit') === _this.paymentTypeMap[paymentType];
+        return model.get('deposit') === _this.transactionTypeMap[transactionType];
       })
       .filter(function(model) {
         return state === 'all'? true : model.get('status') === state;
@@ -105,34 +105,38 @@ var Payments = React.createClass({
     }, this);
 
     //todo make separate component with iterator. Oy.
-    if (paymentType === 'deposits') {
+    if (transactionType === 'deposits') {
       tertiaryNav = (
         <div className="nav-tertiary">
-          <Link to='payments' params={{paymentType: 'deposits', state: 'all'}}>All</Link>
-          <Link to='payments' params={{paymentType: 'deposits', state: 'queued'}}>Queued</Link>
-          <Link to='payments' params={{paymentType: 'deposits', state: 'cleared'}}>Cleared</Link>
+          <Link to='transactions' params={{transactionType: 'deposits', state: 'all'}}>All</Link>
+          <Link to='transactions' params={{transactionType: 'deposits', state: 'invoice'}}>Invoice</Link>
+          <Link to='transactions' params={{transactionType: 'deposits', state: 'queued'}}>Queued</Link>
+          <Link to='transactions' params={{transactionType: 'deposits', state: 'cleared'}}>Cleared</Link>
+          <Link to='transactions' params={{transactionType: 'deposits', state: 'failed'}}>Failed</Link>
         </div>);
     } else {
       tertiaryNav = (
         <div className="nav-tertiary">
-          <Link to='payments' params={{paymentType: 'withdrawals', state: 'all'}}>All</Link>
-          <Link to='payments' params={{paymentType: 'withdrawals', state: 'queued'}}>Queued</Link>
-          <Link to='payments' params={{paymentType: 'withdrawals', state: 'cleared'}}>Cleared</Link>
+          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'all'}}>All</Link>
+          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'invoice'}}>Invoice</Link>
+          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'queued'}}>Queued</Link>
+          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'cleared'}}>Cleared</Link>
+          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'failed'}}>Failed</Link>
         </div>);
     }
 
     return (
-      <DocumentTitle title={this.createTitle(paymentType)}>
+      <DocumentTitle title={this.createTitle(transactionType)}>
         <div>
           <div className="row">
             <div className="col-sm-12 col-xs-12">
-              <h1>Payments:
+              <h1>Transactions:
                 <span className="header-links">
-                  <Link to='payments' params={{paymentType: 'withdrawals', state: 'all'}}>
-                    Outbound
+                  <Link to='transactions' params={{transactionType: 'withdrawals', state: 'all'}}>
+                    Ripple to Bank
                   </Link>
-                  <Link to='payments' params={{paymentType: 'deposits', state: 'all'}}>
-                    Inbound
+                  <Link to='transactions' params={{transactionType: 'deposits', state: 'all'}}>
+                    Bank to Ripple
                   </Link>
                   <ModalTrigger modal={<PaymentCreateForm model={paymentCreateFormModel} />}>
                     <a>Send Payment</a>

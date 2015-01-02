@@ -21,15 +21,15 @@ var AccountDetailContent = React.createClass({
         </div>
         <br />
         <div className="row">
-          Unique Id: {this.props.model.get('uid')}
+          Bank Account Number: {this.props.model.get('uid') || 'none'}
         </div>
         <br />
         <div className="row">
           <div className="col-sm-4 col-xs-12">
-            Name: {this.props.model.get('name')}
+            Name: {this.props.model.get('name') || 'none'}
           </div>
           <div className="col-sm-4 col-xs-12">
-            Address: {this.props.model.get('address')}
+            Federation Address: {this.props.model.get('address')}
           </div>
           <div className="col-sm-4 col-xs-12">
             Type: {this.props.model.get('type')}
@@ -37,11 +37,7 @@ var AccountDetailContent = React.createClass({
         </div>
         <br />
         <div className="row">
-          User Id: {this.props.model.get('user_id')}
-        </div>
-        <br />
-        <div className="row">
-          Data: {this.props.model.get('data') || 'none'}
+          Bank Name: {this.props.model.get('data') || 'none'}
         </div>
       </div>
     );

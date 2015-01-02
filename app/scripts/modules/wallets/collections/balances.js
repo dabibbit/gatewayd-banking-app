@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('path');
 var _ = require('lodash');
 var Backbone = require('backbone');
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
@@ -17,7 +18,7 @@ var Balances = Backbone.Collection.extend({
     };
 
     if (!_.isUndefined(walletTypeMap[options.walletType])) {
-      this.urlPath = '/v1/' + walletTypeMap[options.walletType];
+      this.urlPath = path.join('v1', walletTypeMap[options.walletType]);
     }
 
     _.bindAll(this);
@@ -37,7 +38,7 @@ var Balances = Backbone.Collection.extend({
 
   fetchBalances: function() {
     this.fetch({
-      url: session.get('gatewaydUrl') + this.urlPath,
+      url: path.join(session.get('gatewaydUrl'), this.urlPath),
       headers: {
         Authorization: session.get('credentials')
       }
