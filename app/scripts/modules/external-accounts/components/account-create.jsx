@@ -5,16 +5,13 @@ var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Row = require('react-bootstrap').Row;
 var Col = require('react-bootstrap').Col;
-var Label = require('react-bootstrap').Label;
 var Input = require('react-bootstrap').Input;
 var Button = require('react-bootstrap').Button;
 var accountActions = require('../actions');
+var FormValidationMixin = require('../../../shared/mixins/components/form_validation_mixin');
 
 var AccountCreate = React.createClass({
-  validationMap: {
-    valid: 'success',
-    invalid: 'warning'
-  },
+  mixins: [FormValidationMixin],
 
   refNameTypeMap: {
     name: 'string',
@@ -24,25 +21,45 @@ var AccountCreate = React.createClass({
     data: 'string'
   },
 
-  handleClose: function() {
-    this.props.onSubmitSuccess();
+  // used in getInitialState mixin method
+  initialState: {
+    disableForm: false,
+    submitButtonLabel: 'CreateAccount'
   },
 
-  formatInput: function(rawInputRef, type) {
-    var formattedInput = rawInputRef.getValue().trim();
+  // list of custom event bindings and actions on mount
+  // used in componentDidMount mixin method
+  handleAfterMount: function() {},
 
-    if (!formattedInput) {
-      return null;
-    }
-
-    return type === 'number' ? formattedInput * 1 : formattedInput;
+  // list of custom event unbindings and actions on unmount
+  // used in componentWillUnmount mixin method
+  handleAfterUnmount: function() {
+    accountActions.reset();
   },
 
-  buildFormObject: function(refKeys) {
-    var _this = this;
+  // list of actions to invoke after form input changes
+  // used in handleChange mixin method
+  handleAfterChange: function(refName, fieldValue) {},
 
-    return _.mapValues(refKeys, function(value, key) {
-      return _this.formatInput(_this.refs[key], _this.refNameTypeMap[key]);
+  // list of actions to dispatch when validating field on blur
+  // used in validateField mixin method
+  handleValidations: function(refName, fieldValue) {
+    accountActions.validateField(refName, fieldValue);
+  },
+
+  // list of actions to dispatch after successful creation
+  // used in dispatchCreateComplete mixin method
+  handleAfterCreate: function(data) {
+    this.hideForm();
+
+    accountActions.createAccountComplete(data.externalAccount);
+  },
+
+  // on model sync error
+  handleSubmissionError: function() {
+    this.setState({
+      disableForm: false,
+      submitButtonLabel: 'Re-Submit Account Info?',
     });
   },
 
@@ -59,111 +76,16 @@ var AccountCreate = React.createClass({
     accountActions.createAccountAttempt(account);
   },
 
-  handleSubmissionError: function() {
-    this.setState({
-      disableForm: false,
-      submitButtonLabel: 'Re-Submit Account Info?',
-    });
-  },
-
-  setErrorMessage: function(fieldName, errorMessage) {
-    var invalidField = {};
-
-    invalidField[fieldName] = {
-      inputState: 'invalid',
-      errorMessage: errorMessage
-    };
-
-    this.setState(invalidField);
-  },
-
-  showFailedValidationResult: function(model, validationError) {
-    var _this = this;
-
-    this.handleSubmissionError();
-
-    _.each(validationError, function(attribute) {
-      var name = _.keys(attribute)[0];
-      var firstErrorMessage = attribute[name][0];
-
-      _this.setErrorMessage(name, firstErrorMessage);
-    });
-  },
-
-  handleValidationResult: function(isValid, fieldName, errorMessage) {
-    if (isValid) {
-      var validField = {};
-
-      validField[fieldName] = {inputState: 'valid'};
-
-      this.setState(validField);
-    } else {
-      this.setErrorMessage(fieldName, errorMessage);
-    }
-  },
-
-  validateField: function(fieldName) {
-    var fieldValue = this.formatInput(this.refs[fieldName], this.refNameTypeMap[fieldName]);
-    var clearFieldValidation = {};
-
-    clearFieldValidation[fieldName] = {};
-
-    this.setState(clearFieldValidation);
-
-    if (fieldValue !== null) {
-      accountActions.validateField(fieldName, fieldValue);
-    }
-  },
-
-  dispatchCreateAccountComplete: function(model, data) {
-    this.hideForm();
-
-    accountActions.createAccountComplete(data.externalAccount);
-  },
-
   hideForm: function() {
     this.props.onRequestHide();
   },
 
-  getInitialState: function() {
-    return {
-      name: {},
-      address: {},
-      uid: {},
-      type: {},
-      data: {},
-      disableForm: false,
-      submitButtonLabel: 'Create Account',
-    };
-  },
-
-  componentDidMount: function() {
-    this.props.model.on('invalid', this.showFailedValidationResult);
-    this.props.model.on('validationComplete', this.handleValidationResult);
-    this.props.model.on('sync', this.dispatchCreateAccountComplete);
-    this.props.model.on('error', this.handleSubmissionError);
-
-    accountActions.reset();
-  },
-
-  componentWillUnmount: function() {
-    this.props.model.off('invalid validationComplete sync error');
-  },
-
   render: function() {
-    var requiredLabel = function(labelName) {
-      return (
-        <div>
-          <Label bsStyle="info">Required</Label> {labelName}
-        </div>
-      );
-    };
-
-    var errorMessageLabel = function(errorMessage) {
-      return (
-        <Label bsStyle="warning">{errorMessage}</Label>
-      );
-    };
+    var type = this.state.type;
+    var name = this.state.name;
+    var data = this.state.data;
+    var uid = this.state.uid;
+    var address = this.state.address;
 
     return (
       <Modal
@@ -174,55 +96,61 @@ var AccountCreate = React.createClass({
       >
         <div className="modal-body">
           <form onSubmit={this.handleSubmit}>
-            <Input type="text" ref="name"
-              label="Name:"
-              bsStyle={this.validationMap[this.state.name.inputState]}
-              disabled={this.state.disableForm}
-              onBlur={this.validateField.bind(this, 'name')}
-              hasFeedback
-              autofocus={true}
-            />
-            {errorMessageLabel(this.state.name.errorMessage)}
 
-            <Input type="text" ref="address"
-              label={requiredLabel("Address: ")}
-              bsStyle={this.validationMap[this.state.address.inputState]}
+            <Input type="select" ref={type.refName}
+              label={this.requiredLabel("Type: ")}
+              bsStyle={this.validationMap[type.inputState]}
               disabled={this.state.disableForm}
-              onBlur={this.validateField.bind(this, 'address')}
-              hasFeedback
-            />
-            {errorMessageLabel(this.state.address.errorMessage)}
-
-            <Input type="text" ref="uid"
-              label="Unique Id:"
-              bsStyle={this.validationMap[this.state.uid.inputState]}
-              disabled={this.state.disableForm}
-              onBlur={this.validateField.bind(this, 'uid')}
-              hasFeedback
-            />
-            {errorMessageLabel(this.state.uid.errorMessage)}
-
-            <Input type="select" ref="type"
-              label={requiredLabel("Type: ")}
-              bsStyle={this.validationMap[this.state.type.inputState]}
-              disabled={this.state.disableForm}
-              onBlur={this.validateField.bind(this, 'type')}
+              onBlur={this.validateField.bind(this, type.refName)}
+              onChange={this.handleChange.bind(this, type.refName)}
               hasFeedback
               multiple
+              autofocus={true}
             >
               <option value="customer">Customer</option>
               <option value="gateway">Gateway</option>
             </Input>
-            {errorMessageLabel(this.state.type.errorMessage)}
+            {this.errorMessageLabel(type.errorMessage)}
 
-            <Input type="text" ref="data"
-              label="Data:"
-              bsStyle={this.validationMap[this.state.data.inputState]}
+            <Input type="text" ref={name.refName}
+              label="Name:"
+              bsStyle={this.validationMap[name.inputState]}
               disabled={this.state.disableForm}
-              onBlur={this.validateField.bind(this, 'data')}
+              onBlur={this.validateField.bind(this, name.refName)}
+              onChange={this.handleChange.bind(this, name.refName)}
               hasFeedback
             />
-            {errorMessageLabel(this.state.data.errorMessage)}
+            {this.errorMessageLabel(name.errorMessage)}
+
+            <Input type="text" ref={data.refName}
+              label="Bank Name:"
+              bsStyle={this.validationMap[data.inputState]}
+              disabled={this.state.disableForm}
+              onBlur={this.validateField.bind(this, data.refName)}
+              onChange={this.handleChange.bind(this, data.refName)}
+              hasFeedback
+            />
+            {this.errorMessageLabel(data.errorMessage)}
+
+            <Input type="text" ref={uid.refName}
+              label="Bank Account Number:"
+              bsStyle={this.validationMap[uid.inputState]}
+              disabled={this.state.disableForm}
+              onBlur={this.validateField.bind(this, uid.refName)}
+              onChange={this.handleChange.bind(this, uid.refName)}
+              hasFeedback
+            />
+            {this.errorMessageLabel(uid.errorMessage)}
+
+            <Input type="text" ref={address.refName}
+              label={this.requiredLabel("Federation Address: ")}
+              bsStyle={this.validationMap[address.inputState]}
+              disabled={this.state.disableForm}
+              onBlur={this.validateField.bind(this, address.refName)}
+              onChange={this.handleChange.bind(this, address.refName)}
+              hasFeedback
+            />
+            {this.errorMessageLabel(address.errorMessage)}
 
             <Button className="pull-right" bsStyle="primary" bsSize="large" type="submit"
               disabled={this.state.disableForm || this.state.disableSubmitButton}

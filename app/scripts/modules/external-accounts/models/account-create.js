@@ -73,6 +73,11 @@ var Account = Backbone.Model.extend({
 
   validateField: function(data) {
     var attributeValidation = this.attributeIsValid(data.fieldName, data.fieldValue);
+    var updatedField = {};
+
+    updatedField[data.fieldName] = data.fieldValue;
+
+    this.set(updatedField);
 
     if (attributeValidation.result) {
       this.trigger('validationComplete', true, data.fieldName, '');

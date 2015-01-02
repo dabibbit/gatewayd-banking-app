@@ -1,10 +1,13 @@
 "use strict";
 
+var _ = require('lodash');
 var moment = require('moment');
 var React = require('react');
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
-var PaymentDetailModal = require('./payment-detail-modal.jsx');
+var paymentCreateModel = require('../models/payment-create');
+var PaymentCreateModalForEditing = require('./payment-create-modal.jsx');
 var PaymentDetailContent = require('./payment-detail-content.jsx');
+var paymentActions = require('../actions');
 var Chevron = require('../../../shared/components/glyphicon/chevron.jsx');
 
 var Payment = React.createClass({
@@ -53,7 +56,29 @@ var Payment = React.createClass({
 
     if (!this.props.model.get('deposit') && this.props.model.get('status') === 'queued') {
       doneButton = (
-        <ModalTrigger modal={<PaymentDetailModal model={this.props.model} />}>
+        <ModalTrigger modal={
+          <PaymentCreateModalForEditing
+            title={"Process Ripple to Bank Queued Transaction"}
+            formType={"editPayment"}
+            submitActions={[paymentActions.flagAsDoneWithEdits, paymentActions.flagAsFailed]}
+            model={this.props.model} // converted to form model
+          />
+        }>
+          <button className="btn pull-right">
+            Process
+          </button>
+        </ModalTrigger>
+      );
+    } else if (this.props.model.get('deposit') && this.props.model.get('status') === 'invoice') {
+      doneButton = (
+        <ModalTrigger modal={
+          <PaymentCreateModalForEditing
+            title={"Process Bank to Ripple Invoice Transaction"}
+            formType={"editPayment"}
+            submitActions={[paymentActions.flagAsInvoicePaid, paymentActions.flagAsFailed]}
+            model={this.props.model} // converted to form model
+          />
+        }>
           <button className="btn pull-right">
             Process
           </button>

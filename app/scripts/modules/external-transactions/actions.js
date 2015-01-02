@@ -18,6 +18,34 @@ var actions = {
     });
   },
 
+  flagAsFailed: function(id) {
+    adminDispatcher.handleEvent({
+      actionType: paymentActions.flagAsFailed,
+      data: id
+    });
+  },
+
+  flagAsDoneWithEdits: function(updatedAttributes) {
+    adminDispatcher.handleEvent({
+      actionType: paymentActions.flagAsDoneWithEdits,
+      data: updatedAttributes
+    });
+  },
+
+  flagAsInvoicePaid: function(updatedAttributes) {
+    adminDispatcher.handleEvent({
+      actionType: paymentActions.flagAsInvoicePaid,
+      data: updatedAttributes
+    });
+  },
+
+  populateForm: function(paymentInfo) {
+    adminDispatcher.handleEvent({
+      actionType: paymentActions.populateForm,
+      data: paymentInfo
+    });
+  },
+
   reset: function() {
     adminDispatcher.handleEvent({
       actionType: paymentActions.reset

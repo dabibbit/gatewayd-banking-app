@@ -22,10 +22,7 @@ var PaymentItem = require('./payment.jsx');
 var Collection = require('../collections/payments');
 var collection = new Collection();
 
-var PaymentCreateFormModel = require('../models/payment-create.js');
-var paymentCreateFormModel = new PaymentCreateFormModel();
-var PaymentCreateForm = require('./payment-create.jsx');
-
+var PaymentCreateModal = require('./payment-create-modal.jsx');
 
 var Payments = React.createClass({
   mixins: [ActiveState, Router.State],
@@ -138,8 +135,14 @@ var Payments = React.createClass({
                   <Link to='transactions' params={{transactionType: 'deposits', state: 'all'}}>
                     Bank to Ripple
                   </Link>
-                  <ModalTrigger modal={<PaymentCreateForm model={paymentCreateFormModel} />}>
-                    <a>Send Payment</a>
+                  <ModalTrigger modal={
+                    <PaymentCreateModal
+                      title={"Record Transaction"}
+                      formType={"newPayment"}
+                      submitActions={[paymentActions.sendPaymentAttempt]}
+                    />
+                  }>
+                    <a>Record Transaction</a>
                   </ModalTrigger>
                 </span>
               </h1>

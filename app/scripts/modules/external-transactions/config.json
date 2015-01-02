@@ -2,6 +2,10 @@
   "actions": {
     "updateUrl": "updateUrl",
     "flagAsDone": "flagAsDone",
+    "flagAsFailed": "flagAsFailed",
+    "flagAsDoneWithEdits": "flagAsDoneWithEdits",
+    "flagAsInvoicePaid": "flagAsInvoicePaid",
+    "populateForm": "populateForm",
     "reset": "reset",
     "validateField": "validateField",
     "sendPaymentAttempt": "sendPaymentAttempt",

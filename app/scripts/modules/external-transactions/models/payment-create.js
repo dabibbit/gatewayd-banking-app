@@ -85,8 +85,12 @@ var Payment = Backbone.Model.extend({
     var handleAction = {};
 
     handleAction[paymentConfigActions.reset] = this.reset;
-    handleAction[paymentConfigActions.sendPaymentAttempt] = this.sendPaymentAttempt;
+    handleAction[paymentConfigActions.populateForm] = this.populateForm;
     handleAction[paymentConfigActions.validateField] = this.validateField;
+    handleAction[paymentConfigActions.sendPaymentAttempt] = this.sendPaymentAttempt;
+    handleAction[paymentConfigActions.flagAsFailed] = this.flagAsFailed;
+    handleAction[paymentConfigActions.flagAsDoneWithEdits] = this.flagAsDoneWithEdits;
+    handleAction[paymentConfigActions.flagAsInvoicePaid] = this.flagAsInvoicePaid;
 
     if (!_.isUndefined(handleAction[payload.actionType])) {
       handleAction[payload.actionType](payload.data);
@@ -95,6 +99,10 @@ var Payment = Backbone.Model.extend({
 
   reset: function() {
     this.clear().set(this.defaults);
+  },
+
+  populateForm: function(paymentInfo) {
+    this.set(paymentInfo);
   },
 
   sendPayment: function() {
@@ -109,6 +117,11 @@ var Payment = Backbone.Model.extend({
 
   validateField: function(data) {
     var attributeValidation = this.attributeIsValid(data.fieldName, data.fieldValue);
+    var updatedField = {};
+
+    updatedField[data.fieldName] = data.fieldValue;
+
+    this.set(updatedField);
 
     if (attributeValidation.result) {
       this.trigger('validationComplete', true, data.fieldName, '');
@@ -123,10 +136,49 @@ var Payment = Backbone.Model.extend({
     if (this.isValid()) {
       this.sendPayment();
     }
+  },
+
+  updatePayment: function() {
+    this.save(null, {
+      url: path.join(
+        session.get('gatewaydUrl'), 'v1/external_transactions', this.get('id').toString()),
+      contentType: 'application/json',
+      headers: {
+        Authorization: session.get('credentials')
+      }
+    });
+  },
+
+  flagAsFailed: function(id) {
+    this.set({
+      status: 'failed'
+    });
+
+    this.updatePayment();
+  },
+
+  flagAsDoneWithEdits: function(updatedAttributes) {
+    this.set(_.extend(updatedAttributes, {
+      status: 'cleared'
+    }));
+
+    if (this.isValid()) {
+      this.updatePayment();
+    }
+  },
+
+  flagAsInvoicePaid: function(updatedAttributes) {
+    this.set(_.extend(updatedAttributes, {
+      status: 'queued'
+    }));
+
+    if (this.isValid()) {
+      this.updatePayment();
+    }
   }
 });
 
 //add validation mixin
 _.extend(Payment.prototype, ValidationMixins);
 
-module.exports = Payment;
+module.exports = new Payment();
