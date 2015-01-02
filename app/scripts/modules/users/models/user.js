@@ -4,7 +4,7 @@ var _ = require('lodash');
 var $ = require('jquery');
 
 var Backbone = require('backbone');
-var ValidationMixins = require('../../../shared/helpers/validation_mixin');
+var ValidationMixins = require('../../../shared/mixins/models/validation_mixin');
 
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var userConfigActions = require('../config.json').actions;

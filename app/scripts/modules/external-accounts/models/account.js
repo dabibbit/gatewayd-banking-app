@@ -5,7 +5,7 @@ var $ = require('jquery');
 var heartbeats = require('heartbeats');
 
 var Backbone = require('backbone');
-var ValidationMixins = require('../../../shared/helpers/validation_mixin');
+var ValidationMixins = require('../../../shared/mixins/models/validation_mixin');
 
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var paymentConfigActions = require('../config.json').actions;
