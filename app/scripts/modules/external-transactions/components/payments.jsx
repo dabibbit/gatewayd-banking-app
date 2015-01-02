@@ -137,9 +137,6 @@ var Payments = React.createClass({
                   <ModalTrigger modal={<PaymentCreateForm model={paymentCreateFormModel} />}>
                     <a>Send Payment</a>
                   </ModalTrigger>
-                  <Link to='accounts' params={{accountType: 'all'}}>
-                    To Accounts
-                  </Link>
                 </span>
               </h1>
             </div>

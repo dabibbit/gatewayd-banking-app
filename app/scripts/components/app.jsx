@@ -22,7 +22,16 @@ require('react-bootstrap');
 var topBarConfig = {
   brandName: 'Gatewayd Banking App',
   wrapperClassName: 'navbar-inverse navbar-fixed-top top-bar container-fluid',
-  links: []
+  links: [
+    {
+      text: 'Transactions',
+      href: '/transactions/withdrawals/all'
+    },
+    {
+      text: 'Accounts',
+      href: '/accounts/all'
+    }
+  ]
 };
 
 var App =

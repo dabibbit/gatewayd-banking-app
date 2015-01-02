@@ -113,9 +113,6 @@ var Accounts = React.createClass({
                   <ModalTrigger modal={<AccountCreateForm model={accountCreateFormModel} />}>
                     <a>Create</a>
                   </ModalTrigger>
-                  <Link to='payments' params={{paymentType: 'withdrawals', state: 'all'}}>
-                    To Payments
-                  </Link>
                 </span>
               </h1>
             </div>

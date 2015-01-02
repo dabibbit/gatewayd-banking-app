@@ -4,6 +4,7 @@ var React = require('react');
 var Branding = require('./branding.jsx');
 var NavLinks = require('./nav-links.jsx');
 var Greeting = require('./greeting.jsx');
+var session = require('../../../modules/session/models/session');
 
 var TopBar = React.createClass({
   getDefaultProps: function() {
@@ -50,7 +51,7 @@ var TopBar = React.createClass({
           wrapperClassName={this.props.brandingClassName}
         />
         <Greeting greetingClassName={"greeting-wrapper"} />
-        {nav}
+        { session.isLoggedIn() ? nav : false}
       </div>
     );
   }
