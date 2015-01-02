@@ -1,7 +1,8 @@
 "use strict";
 
 var React = require('react');
-var Link = require('react-router').Link;
+var Router = require('react-router');
+var Link = Router.Link;
 
 /*
   Sample links array:
@@ -23,6 +24,8 @@ var Link = require('react-router').Link;
 */
 
 var NavLinks = React.createClass({
+  mixins: [Router.State],
+
   propTypes: {
     links: React.PropTypes.array,
     navLinksClassName: React.PropTypes.string
@@ -35,10 +38,19 @@ var NavLinks = React.createClass({
   },
 
   getLinks: function(links) {
-    var items = links.map(function(link, i) {
+    var _this = this;
+    var items;
+
+    items = links.map(function(link, i) {
+      var activeClassState = '';
+
+      if (_this.isActive(link.href.split('/')[1])) {
+        activeClassState = 'active';
+      }
+
       return (
         <li key={i++}>
-          <Link to={link.href}>
+          <Link to={link.href} className={activeClassState}>
             {link.text}
           </Link>
         </li>
@@ -49,7 +61,7 @@ var NavLinks = React.createClass({
   },
 
   render: function() {
-    var links = this.getLinks(this.props.links);
+    var links = this.getLinks.call(this, this.props.links);
 
     return (
       <ul className={this.props.navLinksClassName}>

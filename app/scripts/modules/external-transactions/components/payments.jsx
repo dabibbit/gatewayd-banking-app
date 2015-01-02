@@ -77,6 +77,51 @@ var Payments = React.createClass({
     withdrawals: false
   },
 
+  // tertiary nav config: transactionType => path to link to => anchor label
+  navigationInfo: {
+    deposits: {
+      all: 'All',
+      invoice: 'Invoice',
+      queued: 'Queued',
+      cleared: 'Cleared',
+      failed: 'Failed'
+    },
+    withdrawals: {
+      all: 'All',
+      invoice: 'Invoice',
+      queued: 'Queued',
+      cleared: 'Cleared',
+      failed: 'Failed'
+    }
+  },
+
+  buildNavigation: function(navigationInfo, transactionType) {
+    var _this = this;
+    var links = _.map(navigationInfo[transactionType], function(linkLabel, transactionState) {
+      var activeStateClass = '';
+      var params = {
+        transactionType: transactionType,
+        state: transactionState
+      };
+
+      if (_this.isActive('transactions', transactionState)) {
+        activeClass = 'active';
+      }
+
+      return (
+        <Link key={_.uniqueId()} to='transactions' params={params} className={activeStateClass}>
+          {linkLabel}
+        </Link>
+      );
+    });
+
+    return (
+      <div className="nav-tertiary">
+        {links}
+      </div>
+    );
+  },
+
   render: function() {
     var _this = this,
         transactionType = this.getParams().transactionType,
@@ -101,26 +146,7 @@ var Payments = React.createClass({
         );
     }, this);
 
-    //todo make separate component with iterator. Oy.
-    if (transactionType === 'deposits') {
-      tertiaryNav = (
-        <div className="nav-tertiary">
-          <Link to='transactions' params={{transactionType: 'deposits', state: 'all'}}>All</Link>
-          <Link to='transactions' params={{transactionType: 'deposits', state: 'invoice'}}>Invoice</Link>
-          <Link to='transactions' params={{transactionType: 'deposits', state: 'queued'}}>Queued</Link>
-          <Link to='transactions' params={{transactionType: 'deposits', state: 'cleared'}}>Cleared</Link>
-          <Link to='transactions' params={{transactionType: 'deposits', state: 'failed'}}>Failed</Link>
-        </div>);
-    } else {
-      tertiaryNav = (
-        <div className="nav-tertiary">
-          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'all'}}>All</Link>
-          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'invoice'}}>Invoice</Link>
-          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'queued'}}>Queued</Link>
-          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'cleared'}}>Cleared</Link>
-          <Link to='transactions' params={{transactionType: 'withdrawals', state: 'failed'}}>Failed</Link>
-        </div>);
-    }
+    tertiaryNav = this.buildNavigation(this.navigationInfo, transactionType);
 
     return (
       <DocumentTitle title={this.createTitle(transactionType)}>
@@ -129,10 +155,18 @@ var Payments = React.createClass({
             <div className="col-sm-12 col-xs-12">
               <h1>Transactions:
                 <span className="header-links">
-                  <Link to='transactions' params={{transactionType: 'withdrawals', state: 'all'}}>
+                  <Link
+                    to='transactions'
+                    params={{transactionType: 'withdrawals', state: 'all'}}
+                    className={this.isActive('transactions', {transactionType: 'withdrawals'}) ? 'active' : ''}
+                  >
                     Ripple to Bank
                   </Link>
-                  <Link to='transactions' params={{transactionType: 'deposits', state: 'all'}}>
+                  <Link
+                    to='transactions'
+                    params={{transactionType: 'deposits', state: 'all'}}
+                    className={this.isActive('transactions', {transactionType: 'deposits'}) ? 'active' : ''}
+                  >
                     Bank to Ripple
                   </Link>
                   <ModalTrigger modal={
