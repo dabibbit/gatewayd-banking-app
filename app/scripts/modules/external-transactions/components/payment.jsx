@@ -9,6 +9,7 @@ var PaymentCreateModalForEditing = require('./payment-create-modal.jsx');
 var PaymentDetailContent = require('./payment-detail-content.jsx');
 var paymentActions = require('../actions');
 var Chevron = require('../../../shared/components/glyphicon/chevron.jsx');
+var currencyPrecision = require('../../../shared/currency-precision');
 
 var Payment = React.createClass({
   propTypes: {
@@ -53,6 +54,8 @@ var Payment = React.createClass({
     var _this = this;
     var doneButton, refreshIcon, fromAddress, toAddress;
     var paymentItemClasses = 'modal-container';
+    var formattedDestinationAmount = currencyPrecision(
+      this.props.model.get('destination_currency'), this.props.model.get('destination_amount'));
 
     if (!this.props.model.get('deposit') && this.props.model.get('status') === 'queued') {
       doneButton = (
@@ -111,7 +114,7 @@ var Payment = React.createClass({
           <div className="col-sm-3 col-xs-12 text-right">
             <p>
               <span className="header">Amount: </span>
-              <span className="data">{this.props.model.get('destination_amount')} </span>
+              <span className="data">{formattedDestinationAmount} </span>
               <span className="currency">{this.props.model.get('destination_currency')}</span>
             </p>
           </div>

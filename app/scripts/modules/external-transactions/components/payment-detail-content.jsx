@@ -2,6 +2,7 @@
 
 var moment = require('moment');
 var React = require('react');
+var currencyPrecision = require('../../../shared/currency-precision');
 
 var PaymentDetailContent = React.createClass({
   propTypes: {
@@ -10,6 +11,12 @@ var PaymentDetailContent = React.createClass({
   },
 
   render: function() {
+    var formattedSourceAmount = currencyPrecision(
+      this.props.model.get('source_currency'), this.props.model.get('source_amount'));
+
+    var formattedDestinationAmount = currencyPrecision(
+      this.props.model.get('destination_currency'), this.props.model.get('destination_amount'));
+
     return (
       <div className={this.props.paymentDetailClassName}>
         <div className="row border-bottom">
@@ -28,8 +35,8 @@ var PaymentDetailContent = React.createClass({
                 : null
             }
           </div>
-          <div className="col-sm-4 col-xs-12">
-            Amount: {this.props.model.get('source_amount')}
+          <div className="col-sm-3 col-xs-12 text-right">
+            Amount: {formattedSourceAmount}
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
             Currency: {this.props.model.get('source_currency')}
@@ -44,8 +51,8 @@ var PaymentDetailContent = React.createClass({
                 : null
             }
           </div>
-          <div className="col-sm-4 col-xs-12">
-            Amount: {this.props.model.get('destination_amount')}
+          <div className="col-sm-3 col-xs-12 text-right">
+            Amount: {formattedDestinationAmount}
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
             Currency: {this.props.model.get('destination_currency')}
