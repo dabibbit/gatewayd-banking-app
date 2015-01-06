@@ -16,6 +16,25 @@ var Payment = React.createClass({
     model: React.PropTypes.object
   },
 
+  statusMap: {
+
+    // bank to ripple
+    inbound: {
+      invoice: 'quote submitted for review',
+      queued: 'ripple transaction pending',
+      cleared: 'cleared',
+      failed: 'failed'
+    },
+
+    // ripple to bank
+    outbound: {
+      invoice: 'quote received',
+      queued: 'transaction ready to receive',
+      cleared: 'cleared',
+      failed: 'failed'
+    }
+  },
+
   handleDetailIconClick: function(id) {
     this.setState({
       showDetails: !this.state.showDetails
@@ -57,7 +76,14 @@ var Payment = React.createClass({
     var formattedDestinationAmount = currencyPrecision(
       this.props.model.get('destination_currency'), this.props.model.get('destination_amount'));
 
-    if (!this.props.model.get('deposit') && this.props.model.get('status') === 'queued') {
+    // this.props.model.get('deposit'), true === inbound, false === outbound
+    var directionMap = {
+      true: 'inbound',
+      false: 'outbound'
+    };
+    var direction = directionMap[this.props.model.get('deposit')];
+
+    if (direction === 'outbound' && this.props.model.get('status') === 'queued') {
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
@@ -72,7 +98,7 @@ var Payment = React.createClass({
           </button>
         </ModalTrigger>
       );
-    } else if (this.props.model.get('deposit') && this.props.model.get('status') === 'invoice') {
+    } else if (direction === 'inbound' && this.props.model.get('status') === 'invoice') {
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
@@ -121,7 +147,9 @@ var Payment = React.createClass({
           <div className="col-sm-3 col-xs-12 text-right">
             <p>
               <span className="header">Status: </span>
-              <span className="data">{this.props.model.get('status')} </span>
+              <span className="data">
+                {this.statusMap[direction][this.props.model.get('status')]}
+              </span>
               <span className={this.state.refreshIconClasses} />
             </p>
             {doneButton}

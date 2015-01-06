@@ -151,7 +151,9 @@ var Payment = Backbone.Model.extend({
 
   flagAsFailed: function(id) {
     this.set({
-      status: 'failed'
+      status: 'failed',
+      source_amount: 0,
+      destination_amount: 0
     });
 
     this.updatePayment();

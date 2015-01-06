@@ -7,7 +7,7 @@ var Backbone = require('backbone');
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var accountConfigActions = require('../config.json').actions;
 var session = require('../../../modules/session/models/session');
-var Model = require('../models/account.js');
+var Model = require('../models/account');
 
 Backbone.$ = $;
 

@@ -24,7 +24,7 @@ var AccountCreate = React.createClass({
   // used in getInitialState mixin method
   initialState: {
     disableForm: false,
-    submitButtonLabel: 'CreateAccount'
+    submitButtonLabel: 'Create Account'
   },
 
   // list of custom event bindings and actions on mount

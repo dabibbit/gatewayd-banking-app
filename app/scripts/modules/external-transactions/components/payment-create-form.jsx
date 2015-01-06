@@ -197,33 +197,31 @@ var PaymentCreate = React.createClass({
   displayEditPaymentButton: function() {
     return (
       <div className="modal-footer">
-        <div className="row">
-          <div className="col-sm-5 col-sm-offset-1 col-xs-12 col-xs-offset-1">
-            <h4>
-              Do you want to process or fail this transaction?
-            </h4>
-          </div>
-          <div className="col-sm-5 col-sm-offset-1 col-xs-12 col-xs-offset-1">
-            <ButtonToolbar>
-              <Button
-                bsStyle="success"
-                bsSize="large"
-                type="submit"
-              >
-                <span className="glyphicon glyphicon-ok" />
-              </Button>
-              <Button
-                bsStyle="danger"
-                bsSize="large"
-                onClick={this.handleSecondarySubmit}
-              >
-                <span className="glyphicon glyphicon-remove" />
-              </Button>
-              <a onClick={this.hideForm}>
-                <span> cancel</span>
-              </a>
-            </ButtonToolbar>
-          </div>
+        <div className="col-sm-12 col-sm-offset-1 col-xs-12 col-xs-offset-1">
+          <h4>
+            How do you want to process this transaction?
+          </h4>
+        </div>
+        <div className="col-sm-12 col-sm-offset-2 col-xs-12 col-xs-offset-1">
+          <ButtonToolbar>
+            <Button
+              bsStyle="success"
+              bsSize="large"
+              type="submit"
+            >
+              <span className="glyphicon glyphicon-thumbs-up" /> Clear
+            </Button>
+            <Button
+              bsStyle="danger"
+              bsSize="large"
+              onClick={this.handleSecondarySubmit}
+            >
+              <span className="glyphicon glyphicon-thumbs-down" /> Fail
+            </Button>
+            <a onClick={this.hideForm}>
+              <span> cancel</span>
+            </a>
+          </ButtonToolbar>
         </div>
       </div>
     );
