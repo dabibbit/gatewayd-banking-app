@@ -22,7 +22,7 @@ var Account = Backbone.Model.extend({
     address: '', // phone number, email address, IBAN/USBN, etc.
     user_id: 0,
     uid: '',
-    type: '', // gateway/customer
+    type: '', // gateway / customer (acct)
     data: '' // bank name
   },
 

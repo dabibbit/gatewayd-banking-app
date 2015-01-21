@@ -17,7 +17,7 @@ var Account = Backbone.Model.extend({
     name: '',
     address: '', // federation address
     uid: '', // bank account number
-    type: '', // customer/gateway
+    type: '', // gateway / customer (acct)
     data: ''
   },
 
