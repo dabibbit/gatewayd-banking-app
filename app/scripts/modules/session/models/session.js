@@ -1,5 +1,6 @@
 "use strict";
 
+var appConfig = require('../../../../../app-config.json');
 var _ = require('lodash');
 var $ = require('jquery');
 var CryptoJS = require('crypto-js');
@@ -16,10 +17,10 @@ Backbone.$ = $;
 
 var Session = Backbone.Model.extend({
   defaults: {
-    gatewaydUrl: '',
+    gatewaydUrl: appConfig.baseUrl,
     sessionKey: '',
-    lastLogin: 0,
-    credentials: 'ABC' // Base64
+    lastLogin: 1,
+    credentials: '' // Base64
   },
 
   validationRules: {

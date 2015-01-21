@@ -18,7 +18,7 @@ var Navigation = require('react-router').Navigation;
 
 var sessionModel = require('../modules/session/models/session');
 var SessionComponent = require('../modules/session/components/session.jsx');
-var isLoggedIn = false;
+var isLoggedIn = true;
 var userName = '';
 
 var ExternalAccounts = require('../modules/external-accounts/components/accounts.jsx');
@@ -157,7 +157,7 @@ var routes = (
     <Route name="accounts" path="accounts/:accountType" handler={ExternalAccountsModule} />
     <Route name="notFound" handler={NotFound} />
     <NotFoundRoute handler={NotFound} />
-    <Redirect from="/" to={loginPath} />
+    <Redirect from="/" to={defaultPath} />
   </Route>
 );
 
