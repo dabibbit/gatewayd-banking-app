@@ -65,9 +65,15 @@ var Payments = Backbone.Collection.extend({
   flagAsDone: function(id) {
     var model = this.get(id);
 
-    model.set({
-      status: 'cleared'
-    });
+    if (model.get('deposit')) {
+      model.set({
+        status: 'processed'
+      });
+    } else {
+      model.set({
+        status: 'succeeded'
+      });
+    }
 
     model.save(null, {
       url: path.join(session.get('gatewaydUrl'), this.urlObject.flagAsDone.path, id.toString()),

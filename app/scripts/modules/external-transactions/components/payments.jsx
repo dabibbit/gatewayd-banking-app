@@ -83,14 +83,14 @@ var Payments = React.createClass({
       all: 'All',
       invoice: 'Invoice',
       queued: 'Queued',
-      cleared: 'Cleared',
+      processed: 'Processed',
       failed: 'Failed'
     },
     withdrawals: {
       all: 'All',
       invoice: 'Invoice',
       queued: 'Queued',
-      cleared: 'Cleared',
+      succeeded: 'Succeeded',
       failed: 'Failed'
     }
   },

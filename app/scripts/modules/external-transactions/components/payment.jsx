@@ -22,7 +22,7 @@ var Payment = React.createClass({
     inbound: {
       invoice: 'quote submitted for review',
       queued: 'ripple transaction pending',
-      cleared: 'cleared',
+      processed: 'processed',
       failed: 'failed'
     },
 
@@ -30,7 +30,7 @@ var Payment = React.createClass({
     outbound: {
       invoice: 'quote received',
       queued: 'transaction ready to receive',
-      cleared: 'cleared',
+      succeeded: 'succeeded',
       failed: 'failed'
     }
   },

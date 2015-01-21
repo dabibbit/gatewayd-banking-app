@@ -105,7 +105,7 @@ var Payment = Backbone.Model.extend({
   },
 
   checkPollCompletion: function(model) {
-    if (model.get('status') === 'cleared') {
+    if (model.get('status') === 'processed' || model.get('status') === 'succeeded') {
       pollingHeart.clearEvents();
       this.trigger('pollingStop');
     }

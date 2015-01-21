@@ -160,9 +160,15 @@ var Payment = Backbone.Model.extend({
   },
 
   flagAsDoneWithEdits: function(updatedAttributes) {
-    this.set(_.extend(updatedAttributes, {
-      status: 'cleared'
-    }));
+    if (this.get('deposit')) {
+      this.set(_.extend(updatedAttributes, {
+        status: 'processed'
+      }));
+    } else {
+      this.set(_.extend(updatedAttributes, {
+        status: 'succeeded'
+      }));
+    }
 
     if (this.isValid()) {
       this.updatePayment();
