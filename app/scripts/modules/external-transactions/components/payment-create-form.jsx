@@ -121,8 +121,17 @@ var PaymentCreate = React.createClass({
     }).done(function(data) {
       data = data.external_accounts;
 
-      _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'acct'}));
-      _this.destinationOptions = _this.buildAccountOptions(_.where(data, {type: 'gateway'}));
+      if (_this.props.model.get('deposit')) {
+
+        // bank to ripple transactions always use gateway account as the destination
+        _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'acct'}));
+        _this.destinationOptions = _this.buildAccountOptions(_.where(data, {type: 'gateway'}));
+      } else {
+
+        // ripple to bank transactions always use gateway account as the source
+        _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'gateway'}));
+        _this.destinationOptions = _this.buildAccountOptions(_.where(data, {type: 'acct'}));
+      }
 
       _this.setState({
         disableSubmitButton: false

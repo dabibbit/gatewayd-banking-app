@@ -21,6 +21,8 @@ var PaymentCreateModal = React.createClass({
 
   componentWillMount: function() {
     if (!_.isUndefined(this.props.model)) {
+
+      // populate singleton model for forms
       paymentActions.populateForm(this.props.model);
     }
   },
