@@ -11,7 +11,7 @@ var Label = require('react-bootstrap').Label;
 var session = require('../models/session');
 var sessionActions = require('../actions');
 
-var appConfig = require('../../../shared/app-config');
+var appConfig = require('../../../../../app-config');
 
 var LoginForm = React.createClass({
   mixins: [Navigation],
