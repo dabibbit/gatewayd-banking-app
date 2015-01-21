@@ -107,7 +107,7 @@ var AccountCreate = React.createClass({
               multiple
               autofocus={true}
             >
-              <option value="customer">Customer</option>
+              <option value="acct">Customer</option>
               <option value="gateway">Gateway</option>
             </Input>
             {this.errorMessageLabel(type.errorMessage)}

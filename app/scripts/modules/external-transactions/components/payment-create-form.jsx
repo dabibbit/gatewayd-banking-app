@@ -121,7 +121,7 @@ var PaymentCreate = React.createClass({
     }).done(function(data) {
       data = data.external_accounts;
 
-      _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'customer'}));
+      _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'acct'}));
       _this.destinationOptions = _this.buildAccountOptions(_.where(data, {type: 'gateway'}));
 
       _this.setState({
