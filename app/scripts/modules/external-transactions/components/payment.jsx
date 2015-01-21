@@ -41,17 +41,17 @@ var Payment = React.createClass({
     });
   },
 
-  showSpinningIcon: function() {
-    this.setState({
-      refreshIconClasses: 'glyphicon glyphicon-refresh glyphicon-spin'
-    });
-  },
+  // showSpinningIcon: function() {
+  //   this.setState({
+  //     refreshIconClasses: 'glyphicon glyphicon-refresh glyphicon-spin'
+  //   });
+  // },
 
-  hideSpinningIcon: function() {
-    this.setState({
-      refreshIconClasses: ''
-    });
-  },
+  // hideSpinningIcon: function() {
+  //   this.setState({
+  //     refreshIconClasses: ''
+  //   });
+  // },
 
   getInitialState: function() {
     return {
@@ -61,36 +61,37 @@ var Payment = React.createClass({
   },
 
   componentDidMount: function() {
-    this.props.model.on('pollingStart', this.showSpinningIcon);
-    this.props.model.on('pollingStop', this.hideSpinningIcon);
+    // this.props.model.on('pollingStart', this.showSpinningIcon);
+    // this.props.model.on('pollingStop', this.hideSpinningIcon);
   },
 
   componentWillUnmount: function() {
-    this.props.model.off('pollingStart pollingStop');
+    // this.props.model.off('pollingStart pollingStop');
   },
 
   render: function() {
     var _this = this;
     var doneButton, refreshIcon, fromAddress, toAddress;
+    var model = this.props.model;
     var paymentItemClasses = 'modal-container';
     var formattedDestinationAmount = currencyPrecision(
-      this.props.model.get('destination_currency'), this.props.model.get('destination_amount'));
+      model.destination_currency, model.destination_amount);
 
-    // this.props.model.get('deposit'), true === inbound, false === outbound
+    // model.deposit, true === inbound, false === outbound
     var directionMap = {
       true: 'inbound',
       false: 'outbound'
     };
-    var direction = directionMap[this.props.model.get('deposit')];
+    var direction = directionMap[model.deposit];
 
-    if (direction === 'outbound' && this.props.model.get('status') === 'queued') {
+    if (direction === 'outbound' && model.status === 'queued') {
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
             title={"Process Ripple to Bank Queued Transaction"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsDoneWithEdits, paymentActions.flagAsFailed]}
-            model={this.props.model} // converted to form model
+            model={model} // converted to form model
           />
         }>
           <button className="btn pull-right">
@@ -98,14 +99,14 @@ var Payment = React.createClass({
           </button>
         </ModalTrigger>
       );
-    } else if (direction === 'inbound' && this.props.model.get('status') === 'invoice') {
+    } else if (direction === 'inbound' && model.status === 'invoice') {
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
             title={"Process Bank to Ripple Invoice Transaction"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsInvoicePaid, paymentActions.flagAsFailed]}
-            model={this.props.model} // converted to form model
+            model={model} // converted to form model
           />
         }>
           <button className="btn pull-right">
@@ -123,7 +124,7 @@ var Payment = React.createClass({
           <div className="col-sm-3 col-xs-12">
             <p>
               <span className="header">Id: </span>
-              <span className="data">{this.props.model.get('id')} </span>
+              <span className="data">{model.id} </span>
             </p>
           </div>
           <div className="col-sm-3 col-xs-12">
@@ -131,8 +132,8 @@ var Payment = React.createClass({
               <span className="header">Destination Account: </span>
               <span className="data">
                 {
-                  this.props.model.get('toAccount') ?
-                    this.props.model.get('toAccount').name : null
+                  model.toAccount ?
+                    model.toAccount.name : null
                 }
               </span>
             </p>
@@ -141,14 +142,14 @@ var Payment = React.createClass({
             <p>
               <span className="header">Amount: </span>
               <span className="data">{formattedDestinationAmount} </span>
-              <span className="currency">{this.props.model.get('destination_currency')}</span>
+              <span className="currency">{model.destination_currency}</span>
             </p>
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
             <p>
               <span className="header">Status: </span>
               <span className="data">
-                {this.statusMap[direction][this.props.model.get('status')]}
+                {this.statusMap[direction][model.status]}
               </span>
               <span className={this.state.refreshIconClasses} />
             </p>
@@ -163,16 +164,16 @@ var Payment = React.createClass({
         </div>
         <div className="clearfix">
           <span className="date pull-left">
-            {moment(this.props.model.get('createdAt')).format('MMM D, YYYY HH:mm z')}
+            {moment(model.createdAt).format('MMM D, YYYY HH:mm z')}
           </span>
           <Chevron
-            clickHandler={this.handleDetailIconClick.bind(this, this.props.model.get('id'))}
+            clickHandler={this.handleDetailIconClick.bind(this, model.id)}
             iconClasses="pull-right"
           />
         </div>
         <div>
           {this.state.showDetails ?
-            <PaymentDetailContent model={this.props.model} paymentDetailClassName={"details"}/>
+            <PaymentDetailContent model={model} paymentDetailClassName={"details"}/>
             : false}
         </div>
       </li>

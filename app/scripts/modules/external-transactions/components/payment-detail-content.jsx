@@ -11,27 +11,29 @@ var PaymentDetailContent = React.createClass({
   },
 
   render: function() {
+    var model = this.props.model;
+
     var formattedSourceAmount = currencyPrecision(
-      this.props.model.get('source_currency'), this.props.model.get('source_amount'));
+      model.source_currency, model.source_amount);
 
     var formattedDestinationAmount = currencyPrecision(
-      this.props.model.get('destination_currency'), this.props.model.get('destination_amount'));
+      model.destination_currency, model.destination_amount);
 
     return (
       <div className={this.props.paymentDetailClassName}>
         <div className="row border-bottom">
-          Updated {moment(this.props.model.get('updatedAt')).format('MMM D, YYYY HH:mm z')}
+          Updated {moment(model.updatedAt).format('MMM D, YYYY HH:mm z')}
         </div>
         <br />
         <div className="row">
-          Transaction Id: {this.props.model.get('id')}
+          Transaction Id: {model.id}
         </div>
         <br />
         <div className="row">
           <div className="col-sm-6 col-xs-12">
             Source Account: {
-              this.props.model.get('fromAccount') ?
-                this.props.model.get('fromAccount').name + ' - ' + this.props.model.get('fromAccount').address
+              model.fromAccount ?
+                model.fromAccount.name + ' - ' + model.fromAccount.address
                 : null
             }
           </div>
@@ -39,15 +41,15 @@ var PaymentDetailContent = React.createClass({
             Amount: {formattedSourceAmount}
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
-            Currency: {this.props.model.get('source_currency')}
+            Currency: {model.source_currency}
           </div>
         </div>
         <br />
         <div className="row">
           <div className="col-sm-6 col-xs-12">
             Destination Account: {
-              this.props.model.get('toAccount') ?
-                this.props.model.get('toAccount').name + ' - ' + this.props.model.get('toAccount').address
+              model.toAccount ?
+                model.toAccount.name + ' - ' + model.toAccount.address
                 : null
             }
           </div>
@@ -55,20 +57,20 @@ var PaymentDetailContent = React.createClass({
             Amount: {formattedDestinationAmount}
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
-            Currency: {this.props.model.get('destination_currency')}
+            Currency: {model.destination_currency}
           </div>
         </div>
         <br />
         <div className="row">
-          Ripple Transaction Id: {this.props.model.get('ripple_transaction_id') || 'none'}
+          Ripple Transaction Id: {model.ripple_transaction_id || 'none'}
         </div>
         <br />
         <div className="row">
-          Invoice Id: {this.props.model.get('invoice_id') || 'none'}
+          Invoice Id: {model.invoice_id || 'none'}
         </div>
         <br />
         <div className="row">
-          Memos: {this.props.model.get('memos') || 'none'}
+          Memos: {model.memos || 'none'}
         </div>
       </div>
     );

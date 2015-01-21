@@ -31,7 +31,7 @@ var Payments = React.createClass({
 
     // TODO - separate the backbone collection from the state and retrieve only its JSON representation
     return {
-      payments: collection
+      payments: collection.toJSON()
     };
   },
 
@@ -45,7 +45,7 @@ var Payments = React.createClass({
   },
 
   // @data payment collection or model
-  handleCollectionSync: function(data) {
+  handleCollectionSync: function(collection, data) {
 
     // TODO - is there a better way to handle separation of collection vs model syncs?
     if (data instanceof Backbone.Model) {
@@ -56,7 +56,7 @@ var Payments = React.createClass({
       return false;
     } else {
       this.setState({
-        payments: data
+        payments: data.external_transactions
       });
     }
   },
@@ -130,17 +130,17 @@ var Payments = React.createClass({
 
     // less than ideal, will refactor when we have pagination, if not sooner.
     // We could keep different collections for each type, but it depends on use case.
-    var paymentItems = this.state.payments.chain()
+    var paymentItems = _.chain(this.state.payments)
       .filter(function(model) {
-        return model.get('deposit') === _this.transactionTypeMap[transactionType];
+        return model.deposit === _this.transactionTypeMap[transactionType];
       })
       .filter(function(model) {
-        return state === 'all'? true : model.get('status') === state;
+        return state === 'all'? true : model.status === state;
       })
       .map(function(model) {
         return (
           <PaymentItem
-            key={model.get('id')}
+            key={model.id}
             model={model}
           />
         );
