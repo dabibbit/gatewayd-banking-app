@@ -103,7 +103,7 @@ var Payments = Backbone.Collection.extend({
       success: function() {
 
         // poll status of sent payment until failed/succeeded to see changes
-        _this.get(paymentData.id).pollStatus();
+        // _this.get(paymentData.id).pollStatus();
       }
     });
   }
