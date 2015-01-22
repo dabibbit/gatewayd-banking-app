@@ -24,6 +24,8 @@ var collection = new Collection();
 
 var PaymentCreateModal = require('./payment-create-modal.jsx');
 
+var appConfig = require('../../../../../app-config');
+
 var Payments = React.createClass({
   mixins: [ActiveState, Router.State],
 
@@ -33,6 +35,10 @@ var Payments = React.createClass({
     return {
       payments: collection.toJSON()
     };
+  },
+
+  componentWillMount: function() {
+    this.navigationInfoMap = this.buildNavigationInfoMap();
   },
 
   componentDidMount: function() {
@@ -78,26 +84,30 @@ var Payments = React.createClass({
   },
 
   // tertiary nav config: transactionType => path to link to => anchor label
-  navigationInfo: {
-    deposits: {
-      all: 'All',
-      invoice: 'Invoice',
-      queued: 'Queued',
-      processed: 'Processed',
-      failed: 'Failed'
-    },
-    withdrawals: {
-      all: 'All',
-      invoice: 'Invoice',
-      queued: 'Queued',
-      succeeded: 'Succeeded',
-      failed: 'Failed'
-    }
+  navigationInfoMap: {},
+
+  buildNavigationInfoMap: function() {
+    var navigationInfoMap = {};
+
+    // transactionType === withdrawals or deposits
+    _.each(appConfig.status, function(statusCollection, transactionType) {
+
+      // navigation includes all 'status' to display every transaction of specific type
+      navigationInfoMap[transactionType] = {
+        all: 'All'
+      };
+
+      _.each(statusCollection, function(statusDetails, statusName) {
+        navigationInfoMap[transactionType][statusName] = statusDetails.navTitle;
+      });
+    });
+
+    return navigationInfoMap;
   },
 
-  buildNavigation: function(navigationInfo, transactionType) {
+  buildNavigation: function(navigationInfoMap, transactionType) {
     var _this = this;
-    var links = _.map(navigationInfo[transactionType], function(linkLabel, transactionState) {
+    var links = _.map(navigationInfoMap[transactionType], function(linkLabel, transactionState) {
       var activeStateClass = '';
       var params = {
         transactionType: transactionType,
@@ -146,7 +156,7 @@ var Payments = React.createClass({
         );
     }, this);
 
-    tertiaryNav = this.buildNavigation(this.navigationInfo, transactionType);
+    tertiaryNav = this.buildNavigation(this.navigationInfoMap, transactionType);
 
     return (
       <DocumentTitle title={this.createTitle(transactionType)}>

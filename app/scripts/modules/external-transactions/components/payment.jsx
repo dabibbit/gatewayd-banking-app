@@ -10,29 +10,28 @@ var PaymentDetailContent = require('./payment-detail-content.jsx');
 var paymentActions = require('../actions');
 var Chevron = require('../../../shared/components/glyphicon/chevron.jsx');
 var currencyPrecision = require('../../../shared/currency-precision');
+var appConfig = require('../../../../../app-config');
 
 var Payment = React.createClass({
   propTypes: {
     model: React.PropTypes.object
   },
 
-  statusMap: {
+  statusMap: {},
 
-    // bank to ripple
-    inbound: {
-      invoice: 'quote submitted for review',
-      queued: 'ripple transaction pending',
-      processed: 'processed',
-      failed: 'failed'
-    },
+  buildStatusMap: function() {
+    var statusMap = {};
 
-    // ripple to bank
-    outbound: {
-      invoice: 'quote received',
-      queued: 'transaction ready to receive',
-      succeeded: 'succeeded',
-      failed: 'failed'
-    }
+    // transactionType === withdrawals or deposits
+    _.each(appConfig.status, function(statusCollection, transactionType) {
+      statusMap[transactionType] = {};
+
+      _.each(statusCollection, function(statusDetails, statusName) {
+        statusMap[transactionType][statusName] = statusDetails.message;
+      });
+    });
+
+    return statusMap;
   },
 
   handleDetailIconClick: function(id) {
@@ -60,9 +59,10 @@ var Payment = React.createClass({
     };
   },
 
-  componentDidMount: function() {
+  componentWillMount: function() {
     // this.props.model.on('pollingStart', this.showSpinningIcon);
     // this.props.model.on('pollingStop', this.hideSpinningIcon);
+    this.statusMap = this.buildStatusMap();
   },
 
   componentWillUnmount: function() {
@@ -77,14 +77,14 @@ var Payment = React.createClass({
     var formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
-    // model.deposit, true === inbound, false === outbound
-    var directionMap = {
-      true: 'inbound',
-      false: 'outbound'
+    // model.deposit, true === deposits, false === withdrawals
+    var typeMap = {
+      true: 'deposits',
+      false: 'withdrawals'
     };
-    var direction = directionMap[model.deposit];
+    var transactionType = typeMap[model.deposit];
 
-    if (direction === 'outbound' && model.status === 'queued') {
+    if (transactionType === 'withdrawals' && model.status === appConfig.status.withdrawals.queued.name) {
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
@@ -99,7 +99,7 @@ var Payment = React.createClass({
           </button>
         </ModalTrigger>
       );
-    } else if (direction === 'inbound' && model.status === 'invoice') {
+    } else if (transactionType === 'deposits' && model.status === appConfig.status.deposits.invoice.name) {
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
@@ -149,7 +149,7 @@ var Payment = React.createClass({
             <p>
               <span className="header">Status: </span>
               <span className="data">
-                {this.statusMap[direction][model.status]}
+                {this.statusMap[transactionType][model.status]}
               </span>
               <span className={this.state.refreshIconClasses} />
             </p>

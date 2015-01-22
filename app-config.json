@@ -1,4 +1,50 @@
 {
   "baseName": "admin@example.com",
-  "baseUrl": "https://localhost:5000"
+  "baseUrl": "https://localhost:5000",
+  "status": {
+    "deposits": {
+      "invoice": {
+        "name": "invoice",
+        "navTitle": "Invoice",
+        "message": "quote submitted for review"
+      },
+      "queued": {
+        "name": "queued",
+        "navTitle": "Queued",
+        "message": "ripple transaction pending"
+      },
+      "cleared": {
+        "name": "processed",
+        "navTitle": "Processed",
+        "message": "processed"
+      },
+      "failed": {
+        "name": "failed",
+        "navTitle": "Failed",
+        "message": "failed"
+      }
+    },
+    "withdrawals": {
+      "invoice": {
+        "name": "invoice",
+        "navTitle": "Invoice",
+        "message": "quote received"
+      },
+      "queued": {
+        "name": "queued",
+        "navTitle": "Queued",
+        "message": "transaction ready to receive"
+      },
+      "cleared": {
+        "name": "succeeded",
+        "navTitle": "Succeeded",
+        "message": "succeeded"
+      },
+      "failed": {
+        "name": "failed",
+        "navTitle": "Failed",
+        "message": "failed"
+      }
+    }
+  }
 }

@@ -8,6 +8,7 @@ var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var paymentConfigActions = require('../config.json').actions;
 var session = require('../../../modules/session/models/session');
 var Model = require('../models/payment.js');
+var appConfig = require('../../../../../app-config');
 
 Backbone.$ = $;
 
@@ -67,11 +68,11 @@ var Payments = Backbone.Collection.extend({
 
     if (model.get('deposit')) {
       model.set({
-        status: 'processed'
+        status: appConfig.status.deposits.cleared.name
       });
     } else {
       model.set({
-        status: 'succeeded'
+        status: appConfig.status.withdrawals.cleared.name
       });
     }
 

@@ -11,6 +11,7 @@ var ValidationMixins = require('../../../shared/mixins/models/validation_mixin')
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var paymentConfigActions = require('../config.json').actions;
 var session = require('../../../modules/session/models/session');
+var appConfig = require('../../../../../app-config');
 
 var pollingHeart = new heartbeats.Heart(5000);
 
@@ -105,7 +106,10 @@ var Payment = Backbone.Model.extend({
   },
 
   checkPollCompletion: function(model) {
-    if (model.get('status') === 'processed' || model.get('status') === 'succeeded') {
+    if (
+      model.get('status') === appConfig.status.inbound.cleared.name ||
+      model.get('status') === appConfig.status.outbound.cleared.name
+    ) {
       pollingHeart.clearEvents();
       this.trigger('pollingStop');
     }

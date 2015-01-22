@@ -9,6 +9,7 @@ var ValidationMixins = require('../../../shared/mixins/models/validation_mixin')
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var paymentConfigActions = require('../config.json').actions;
 var session = require('../../session/models/session');
+var appConfig = require('../../../../../app-config');
 
 Backbone.$ = $;
 
@@ -22,7 +23,7 @@ var Payment = Backbone.Model.extend({
     destination_currency: '',
     deposit: true, // always true
     external_account_id: 1, // why is this required?
-    status: 'queued', // always starts off queued
+    status: appConfig.status.deposits.queued.name, // always starts off queued
     // ripple_transaction_id: 0,
     // uid: '',
     // data: '',
@@ -150,11 +151,20 @@ var Payment = Backbone.Model.extend({
   },
 
   flagAsFailed: function(id) {
-    this.set({
-      status: 'failed',
-      source_amount: 0,
-      destination_amount: 0
-    });
+    if (this.get('deposit')) {
+      this.set({
+        status: appConfig.status.deposits.failed.name,
+        source_amount: 0,
+        destination_amount: 0
+      });
+    } else {
+      this.set({
+        status: appConfig.status.withdrawals.failed.name,
+        source_amount: 0,
+        destination_amount: 0
+      });
+    }
+
 
     this.updatePayment();
   },
@@ -162,11 +172,11 @@ var Payment = Backbone.Model.extend({
   flagAsDoneWithEdits: function(updatedAttributes) {
     if (this.get('deposit')) {
       this.set(_.extend(updatedAttributes, {
-        status: 'processed'
+        status: appConfig.status.deposits.cleared.name
       }));
     } else {
       this.set(_.extend(updatedAttributes, {
-        status: 'succeeded'
+        status: appConfig.status.withdrawals.cleared.name
       }));
     }
 
@@ -177,7 +187,7 @@ var Payment = Backbone.Model.extend({
 
   flagAsInvoicePaid: function(updatedAttributes) {
     this.set(_.extend(updatedAttributes, {
-      status: 'queued'
+      status: appConfig.status.deposits.queued.name
     }));
 
     if (this.isValid()) {
