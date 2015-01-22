@@ -13,7 +13,7 @@
         "navTitle": "Queued",
         "message": "ripple transaction pending"
       },
-      "cleared": {
+      "processed": {
         "name": "processed",
         "navTitle": "Processed",
         "message": "processed"
@@ -35,7 +35,7 @@
         "navTitle": "Queued",
         "message": "transaction ready to receive"
       },
-      "cleared": {
+      "succeeded": {
         "name": "succeeded",
         "navTitle": "Succeeded",
         "message": "succeeded"

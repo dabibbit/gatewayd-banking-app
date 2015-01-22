@@ -172,11 +172,11 @@ var Payment = Backbone.Model.extend({
   flagAsDoneWithEdits: function(updatedAttributes) {
     if (this.get('deposit')) {
       this.set(_.extend(updatedAttributes, {
-        status: appConfig.status.deposits.cleared.name
+        status: appConfig.status.deposits.processed.name
       }));
     } else {
       this.set(_.extend(updatedAttributes, {
-        status: appConfig.status.withdrawals.cleared.name
+        status: appConfig.status.withdrawals.succeeded.name
       }));
     }
 

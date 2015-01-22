@@ -68,11 +68,11 @@ var Payments = Backbone.Collection.extend({
 
     if (model.get('deposit')) {
       model.set({
-        status: appConfig.status.deposits.cleared.name
+        status: appConfig.status.deposits.processed.name
       });
     } else {
       model.set({
-        status: appConfig.status.withdrawals.cleared.name
+        status: appConfig.status.withdrawals.succeeded.name
       });
     }
 
