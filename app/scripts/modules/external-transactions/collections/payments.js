@@ -4,6 +4,7 @@ var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
 var Backbone = require('backbone');
+var moment = require('moment');
 var adminDispatcher = require('../../../dispatchers/admin-dispatcher');
 var paymentConfigActions = require('../config.json').actions;
 var session = require('../../../modules/session/models/session');
@@ -32,6 +33,7 @@ var Payments = Backbone.Collection.extend({
     handleAction[paymentConfigActions.updateUrl] = this.updateUrl;
     handleAction[paymentConfigActions.flagAsDone] = this.flagAsDone;
     handleAction[paymentConfigActions.fetchExternalTransactions] = this.fetchExternalTransactions;
+    handleAction[paymentConfigActions.fetchNewExternalTransactions] = this.fetchNewExternalTransactions;
     handleAction[paymentConfigActions.sendPaymentComplete] = this.sendPaymentComplete;
 
     if (!_.isUndefined(this[payload.actionType])) {
@@ -57,7 +59,7 @@ var Payments = Backbone.Collection.extend({
       return false;
     }
 
-    this.url = path.join(session.get('gatewaydUrl'), this.urlObject[page].path);
+    this.url = session.get('gatewaydUrl') + this.urlObject[page].path;
     this.httpMethod = this.urlObject[page].method;
 
     this.fetchExternalTransactions();
@@ -85,6 +87,8 @@ var Payments = Backbone.Collection.extend({
   },
 
   fetchExternalTransactions: function() {
+    var _this = this;
+
     if (_.isUndefined(this.url)) {
       this.url = path.join(session.get('gatewaydUrl'), this.urlObject.payments.path);
     }
@@ -92,7 +96,43 @@ var Payments = Backbone.Collection.extend({
     this.fetch({
       headers: {
         Authorization: session.get('credentials')
+      },
+      success: function(collection, response) {
+        _this.trigger('fetchedTransactions', collection);
       }
+    });
+  },
+
+  getNewExternalTransactionsUrl: function(updatedAt) {
+    var timeStamp = encodeURIComponent(moment(updatedAt).format('YYYY-MM-DD HH:mm:ss.ms'));
+
+    return this.url + '?count=200' + '&sort_direction=asc' + '&index=' + timeStamp;
+  },
+
+  fetchNewExternalTransactions: function() {
+    if (!this.length) {
+      this.fetchExternalTransactions();
+      return false;
+    }
+
+    var _this = this;
+    var url = this.getNewExternalTransactionsUrl(this.at(0).get('updatedAt'));
+
+    this.fetch({
+      url: url,
+      remove: false,
+      headers: {
+        Authorization: session.get('credentials')
+      },
+      success: function(collection, response) {
+        _this.trigger('refreshedTransactions', collection);
+      }
+    })
+    .then(function(models) {
+
+      //todo: find out why we need this!!
+      //this is a hack!!!
+      _this.set(models.externalTransactions);
     });
   },
 

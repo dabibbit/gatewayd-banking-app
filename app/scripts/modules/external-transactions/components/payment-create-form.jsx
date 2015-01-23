@@ -237,16 +237,16 @@ var PaymentCreate = React.createClass({
   },
 
   submitButton: function() {
-      var formTypeMap = {};
+    var formTypeMap = {};
 
-      formTypeMap.newPayment = this.displayNewPaymentButton;
-      formTypeMap.editPayment = this.displayEditPaymentButton;
+    formTypeMap.newPayment = this.displayNewPaymentButton;
+    formTypeMap.editPayment = this.displayEditPaymentButton;
 
-      if (!_.isUndefined(formTypeMap[this.props.formType])) {
-        return formTypeMap[this.props.formType]();
-      }
+    if (!_.isUndefined(formTypeMap[this.props.formType])) {
+      return formTypeMap[this.props.formType]();
+    }
 
-      return false;
+    return false;
   },
 
   render: function() {

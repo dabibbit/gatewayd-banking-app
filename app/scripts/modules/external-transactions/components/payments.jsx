@@ -42,29 +42,19 @@ var Payments = React.createClass({
   },
 
   componentDidMount: function() {
-    collection.on('sync', this.handleCollectionSync);
+    collection.on('fetchedTransactions refreshedTransactions', this.handleCollectionSync);
     paymentActions.updateUrl(this.getPath());
   },
 
   componentWillUnmount: function() {
-    collection.off('sync');
+    collection.off('fetchedTransactions refreshedTransactions');
   },
 
   // @data payment collection or model
   handleCollectionSync: function(collection, data) {
-
-    // TODO - is there a better way to handle separation of collection vs model syncs?
-    if (data instanceof Backbone.Model) {
-
-      // changing a model in the collection/state won't trigger a re-render
-      this.forceUpdate();
-
-      return false;
-    } else {
-      this.setState({
-        payments: data.external_transactions
-      });
-    }
+    this.setState({
+      payments: collection.toJSON()
+    });
   },
 
   createTitle: function(transactionType) {

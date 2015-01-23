@@ -73,7 +73,6 @@ var Payment = React.createClass({
     var _this = this;
     var doneButton, refreshIcon, accountName;
     var model = this.props.model;
-    var paymentItemClasses = 'modal-container';
     var formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
@@ -135,7 +134,7 @@ var Payment = React.createClass({
     }
 
     return (
-      <li className={"payment-item list-group-item " + paymentItemClasses} ref="container">
+      <li className={"payment-item list-group-item animated fade-in modal-container"} ref="container">
         <div className="row">
           <div className="col-sm-3 col-xs-12">
             <p>

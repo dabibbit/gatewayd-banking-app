@@ -165,7 +165,6 @@ var Payment = Backbone.Model.extend({
       });
     }
 
-
     this.updatePayment();
   },
 

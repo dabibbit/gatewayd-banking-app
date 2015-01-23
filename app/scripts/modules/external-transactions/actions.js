@@ -80,6 +80,12 @@ var actions = {
     adminDispatcher.handleEvent({
       actionType: paymentActions.fetchExternalTransactions
     });
+  },
+
+  fetchNewExternalTransactions: function() {
+    adminDispatcher.handleEvent({
+      actionType: paymentActions.fetchNewExternalTransactions
+    });
   }
 };
 

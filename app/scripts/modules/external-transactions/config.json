@@ -10,6 +10,7 @@
     "validateField": "validateField",
     "sendPaymentAttempt": "sendPaymentAttempt",
     "sendPaymentComplete": "sendPaymentComplete",
-    "fetchExternalTransactions": "fetchExternalTransactions"
+    "fetchExternalTransactions": "fetchExternalTransactions",
+    "fetchNewExternalTransactions": "fetchNewExternalTransactions"
   }
 }
