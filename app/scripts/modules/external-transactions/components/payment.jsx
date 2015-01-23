@@ -77,6 +77,12 @@ var Payment = React.createClass({
     var formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
+    var defaultPaymentDetailModel = _.defaults({
+      ripple_transaction_id: 'none',
+      invoice_id: 'none',
+      memos: 'none'
+    }, model);
+
     // model.deposit, true === deposits, false === withdrawals
     var typeMap = {
       true: 'deposits',
@@ -178,7 +184,7 @@ var Payment = React.createClass({
         </div>
         <div>
           {this.state.showDetails ?
-            <PaymentDetailContent model={model} paymentDetailClassName={"details"}/>
+            <PaymentDetailContent {...defaultPaymentDetailModel} paymentDetailClassName={"details"}/>
             : false}
         </div>
       </li>

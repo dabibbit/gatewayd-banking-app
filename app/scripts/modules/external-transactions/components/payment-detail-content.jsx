@@ -6,12 +6,11 @@ var currencyPrecision = require('../../../shared/currency-precision');
 
 var PaymentDetailContent = React.createClass({
   propTypes: {
-    model: React.PropTypes.object,
     paymentDetailClassName: React.PropTypes.string
   },
 
   render: function() {
-    var model = this.props.model;
+    var model = this.props;
 
     var formattedSourceAmount = currencyPrecision(
       model.source_currency, model.source_amount);
@@ -62,15 +61,15 @@ var PaymentDetailContent = React.createClass({
         </div>
         <br />
         <div className="row">
-          Ripple Transaction Id: {model.ripple_transaction_id || 'none'}
+          Ripple Transaction Id: {model.ripple_transaction_id}
         </div>
         <br />
         <div className="row">
-          Invoice Id: {model.invoice_id || 'none'}
+          Invoice Id: {model.invoice_id}
         </div>
         <br />
         <div className="row">
-          Memos: {model.memos || 'none'}
+          Memos: {model.memos}
         </div>
       </div>
     );
