@@ -17,7 +17,7 @@ Backbone.$ = $;
 
 var Session = Backbone.Model.extend({
   defaults: {
-    gatewaydUrl: appConfig.baseUrl,
+    gatewaydUrl: location.origin,
     sessionKey: '',
     lastLogin: 1,
     credentials: '' // Base64
