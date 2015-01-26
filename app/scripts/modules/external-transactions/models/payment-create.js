@@ -108,7 +108,7 @@ var Payment = Backbone.Model.extend({
 
   sendPayment: function() {
     this.save(null, {
-      url: path.join(session.get('gatewaydUrl'), 'v1/external_transactions'),
+      url: session.get('gatewaydUrl') + path.join('/', 'v1/external_transactions'),
       contentType: 'application/json',
       headers: {
         Authorization: session.get('credentials')
@@ -141,8 +141,8 @@ var Payment = Backbone.Model.extend({
 
   updatePayment: function() {
     this.save(null, {
-      url: path.join(
-        session.get('gatewaydUrl'), 'v1/external_transactions', this.get('id').toString()),
+      url: session.get('gatewaydUrl') + path.join(
+        '/', 'v1/external_transactions', this.get('id').toString()),
       contentType: 'application/json',
       headers: {
         Authorization: session.get('credentials')

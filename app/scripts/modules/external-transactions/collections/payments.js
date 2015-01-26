@@ -59,7 +59,7 @@ var Payments = Backbone.Collection.extend({
       return false;
     }
 
-    this.url = session.get('gatewaydUrl') + this.urlObject[page].path;
+    this.url = session.get('gatewaydUrl') + path.join('/', this.urlObject[page].path);
     this.httpMethod = this.urlObject[page].method;
 
     this.fetchExternalTransactions();
@@ -79,7 +79,7 @@ var Payments = Backbone.Collection.extend({
     }
 
     model.save(null, {
-      url: path.join(session.get('gatewaydUrl'), this.urlObject.flagAsDone.path, id.toString()),
+      url: session.get('gatewaydUrl') + path.join('/', this.urlObject.flagAsDone.path, id.toString()),
       beforeSend: function(xhr) {
         xhr.setRequestHeader('Authorization', session.get('credentials'));
       }
@@ -90,7 +90,7 @@ var Payments = Backbone.Collection.extend({
     var _this = this;
 
     if (_.isUndefined(this.url)) {
-      this.url = path.join(session.get('gatewaydUrl'), this.urlObject.payments.path);
+      this.url = session.get('gatewaydUrl') + path.join('/', this.urlObject.payments.path);
     }
 
     this.fetch({

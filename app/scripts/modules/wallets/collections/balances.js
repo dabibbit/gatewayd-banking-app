@@ -38,7 +38,7 @@ var Balances = Backbone.Collection.extend({
 
   fetchBalances: function() {
     this.fetch({
-      url: path.join(session.get('gatewaydUrl'), this.urlPath),
+      url: session.gatewaydUrl + path.join('/', this.urlPath),
       headers: {
         Authorization: session.get('credentials')
       }

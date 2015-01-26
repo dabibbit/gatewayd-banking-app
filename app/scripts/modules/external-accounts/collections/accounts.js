@@ -51,7 +51,7 @@ var Accounts = Backbone.Collection.extend({
       return false;
     }
 
-    this.url = path.join(session.get('gatewaydUrl'), this.urlObject[page].path);
+    this.url = session.get('gatewaydUrl') + path.join('/', this.urlObject[page].path);
     this.httpMethod = this.urlObject[page].method;
 
     this.fetchExternalAccounts();

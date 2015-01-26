@@ -117,7 +117,7 @@ var Payment = Backbone.Model.extend({
 
   pollStatusHelper: function() {
     this.fetch({
-      url: path.join(session.get('gatewaydUrl'), 'v1/external_transactions', this.get('id').toString()),
+      url: session.get('gatewaydUrl') + path.join('/', 'v1/external_transactions', this.get('id').toString()),
       dataType: 'json',
       contentType: 'application/json',
       headers: {

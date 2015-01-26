@@ -116,8 +116,8 @@ var PaymentCreate = React.createClass({
   fetchAccounts: function() {
     $.ajax({
       type: 'GET',
-      url: path.join(session.get('gatewaydUrl'), 'v1/external_accounts'),
-      beforeSend: xhr => {
+      url: session.get('gatewaydUrl') + path.join('/', 'v1/external_accounts'),
+      beforeSend: function (xhr) {
         xhr.setRequestHeader ('Authorization', session.get('credentials'));
       }
     }).done(data => {

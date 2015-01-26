@@ -63,7 +63,7 @@ var Account = Backbone.Model.extend({
 
   createAccount: function() {
     this.save(null, {
-      url: path.join(session.get('gatewaydUrl'), 'v1/external_accounts'),
+      url: session.get('gatewaydUrl') + path.join('/', 'v1/external_accounts'),
       contentType: 'application/json',
       headers: {
         Authorization: session.get('credentials')
