@@ -71,7 +71,7 @@ var Payment = React.createClass({
 
   render: function() {
     var _this = this;
-    var doneButton, refreshIcon, fromAddress, toAddress;
+    var doneButton, refreshIcon, accountName;
     var model = this.props.model;
     var paymentItemClasses = 'modal-container';
     var formattedDestinationAmount = currencyPrecision(
@@ -81,6 +81,10 @@ var Payment = React.createClass({
     var typeMap = {
       true: 'deposits',
       false: 'withdrawals'
+    };
+    var accountNameDirectionMap = {
+      true: 'Source',
+      false: 'Destination'
     };
     var transactionType = typeMap[model.deposit];
 
@@ -118,6 +122,12 @@ var Payment = React.createClass({
       doneButton = false;
     }
 
+    if (transactionType === 'deposits') {
+      accountName = model.fromAccount ? model.fromAccount.name : null;
+    } else {
+      accountName = model.toAccount ? model.toAccount.name : null;
+    }
+
     return (
       <li className={"payment-item list-group-item " + paymentItemClasses} ref="container">
         <div className="row">
@@ -129,13 +139,8 @@ var Payment = React.createClass({
           </div>
           <div className="col-sm-3 col-xs-12">
             <p>
-              <span className="header">Destination Account: </span>
-              <span className="data">
-                {
-                  model.toAccount ?
-                    model.toAccount.name : null
-                }
-              </span>
+              <span className="header">{accountNameDirectionMap[model.deposit]} Account: </span>
+              <span className="data">{accountName}</span>
             </p>
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
