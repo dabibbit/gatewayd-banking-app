@@ -14,14 +14,18 @@ var TopBar = React.createClass({
       links: [{
         text: 'Login',
         href: '/login'
-      }]
+      }],
+      isLoggedIn: false,
+      userName: ''
     };
   },
 
   propTypes: {
     links: React.PropTypes.array,
     brandName: React.PropTypes.string,
-    wrapperClassName: React.PropTypes.string
+    wrapperClassName: React.PropTypes.string,
+    isLoggedIn: React.PropTypes.bool,
+    userName: React.PropTypes.string
   },
 
   handleExpand: function(e) {
@@ -50,7 +54,12 @@ var TopBar = React.createClass({
           brandName={this.props.brandName}
           wrapperClassName={this.props.brandingClassName}
         />
-        <Greeting greetingClassName={"greeting-wrapper"} />
+        <
+          Greeting
+            greetingClassName={"greeting-wrapper"}
+            isLoggedIn={this.props.isLoggedIn}
+            userName={this.props.userName}
+        />
         { session.isLoggedIn() ? nav : false}
       </div>
     );

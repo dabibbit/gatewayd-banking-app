@@ -2,8 +2,6 @@
 
 var React = require('react');
 
-var Navigation = require('react-router').Navigation;
-
 var Input = require('react-bootstrap').Input;
 var Button = require('react-bootstrap').Button;
 var Label = require('react-bootstrap').Label;
@@ -14,8 +12,6 @@ var sessionActions = require('../actions');
 var appConfig = require('../../../../../app-config');
 
 var LoginForm = React.createClass({
-  mixins: [Navigation],
-
   handleSubmit: function(e) {
     e.preventDefault();
 
@@ -61,17 +57,11 @@ var LoginForm = React.createClass({
   },
 
   componentDidMount: function() {
-    var _this = this;
-
-    session.on('sync', function() {
-      _this.transitionTo('/transactions/withdrawals/all');
-    });
-
     session.on('error', this.handleError);
   },
 
   componentWillUnmout: function() {
-    session.off('sync error');
+    session.off('error');
   },
 
   render: function() {

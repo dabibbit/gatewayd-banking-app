@@ -105,6 +105,7 @@ var Session = Backbone.Model.extend({
     var oldSession, oldUser, restoredUser;
 
     if (sessionStorage.length === 0) {
+      this.trigger('attemptRestore', {success: false, session: this});
       return;
     }
 
@@ -114,6 +115,8 @@ var Session = Backbone.Model.extend({
     oldUser = this.get('userModel');
     restoredUser = new UserModel(oldUser);
     this.set('userModel', restoredUser);
+
+    this.trigger('attemptRestore', {success: true, session: this});
   },
 
   logout: function() {
@@ -126,7 +129,7 @@ var Session = Backbone.Model.extend({
     this.set(this.defaults);
 
     sessionStorage.clear();
-    this.trigger('logout');
+    this.trigger('logout', {session: this});
   },
 
   isLoggedIn: function() {
