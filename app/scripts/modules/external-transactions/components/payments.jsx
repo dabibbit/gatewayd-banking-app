@@ -42,12 +42,12 @@ var Payments = React.createClass({
   },
 
   componentDidMount: function() {
-    collection.on('fetchedTransactions refreshedTransactions', this.handleCollectionSync);
+    collection.on('fetchedTransactions refreshedTransactions sync', this.handleCollectionSync);
     paymentActions.updateUrl(this.getPath());
   },
 
   componentWillUnmount: function() {
-    collection.off('fetchedTransactions refreshedTransactions');
+    collection.off('fetchedTransactions refreshedTransactions sync');
   },
 
   // @data payment collection or model
