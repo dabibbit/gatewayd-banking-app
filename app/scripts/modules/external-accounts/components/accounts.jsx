@@ -88,7 +88,8 @@ var Accounts = React.createClass({
     // We could keep different collections for each type, but it depends on use case.
     var paymentItems = _.chain(this.state.accounts)
       .filter(function(model) {
-        return accountType === 'all' || this.typeMap[model.type] === accountType;
+        console.log('model.type', model.type);
+        return accountType === 'all' || _this.typeMap[model.type] === accountType;
       })
       .map(function(model) {
         return (
