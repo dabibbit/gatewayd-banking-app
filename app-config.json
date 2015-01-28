@@ -6,44 +6,44 @@
       "invoice": {
         "name": "invoice",
         "navTitle": "Invoice",
-        "message": "quote submitted for review"
+        "message": "Waiting for incoming transaction"
       },
       "queued": {
         "name": "queued",
         "navTitle": "Queued",
-        "message": "ripple transaction pending"
+        "message": "Processing transaction"
       },
       "processed": {
         "name": "processed",
         "navTitle": "Processed",
-        "message": "processed"
+        "message": "Transaction cleared"
       },
       "failed": {
         "name": "failed",
         "navTitle": "Failed",
-        "message": "failed"
+        "message": "Transaction failed"
       }
     },
     "withdrawals": {
       "invoice": {
         "name": "invoice",
         "navTitle": "Invoice",
-        "message": "quote received"
+        "message": "Waiting for incoming transaction"
       },
       "queued": {
         "name": "queued",
         "navTitle": "Queued",
-        "message": "transaction ready to receive"
+        "message": "Waiting for transaction to be processed"
       },
       "succeeded": {
         "name": "succeeded",
         "navTitle": "Succeeded",
-        "message": "succeeded"
+        "message": "Transaction cleared"
       },
       "failed": {
         "name": "failed",
         "navTitle": "Failed",
-        "message": "failed"
+        "message": "Transaction failed"
       }
     }
   }
