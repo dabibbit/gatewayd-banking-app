@@ -125,14 +125,17 @@ var Payments = Backbone.Collection.extend({
         Authorization: session.get('credentials')
       },
       success: function(collection, response) {
+
+        // do nothing if nothing returned
+        if (!response.external_transactions.length) {
+          return false;
+        }
+
+        // todo: not sure why we need to set explicitly
+        // rather than letting bbone merge data
+        _this.set(response.external_transactions, {remove: false});
         _this.trigger('refreshedTransactions', collection);
       }
-    })
-    .then(function(models) {
-
-      //todo: find out why we need this!!
-      //this is a hack!!!
-      _this.set(models.externalTransactions);
     });
   },
 

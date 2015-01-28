@@ -50,7 +50,6 @@ var Payments = React.createClass({
     collection.off('fetchedTransactions refreshedTransactions sync');
   },
 
-  // @data payment collection or model
   handleCollectionSync: function(collection, data) {
     this.setState({
       payments: collection.toJSON()
