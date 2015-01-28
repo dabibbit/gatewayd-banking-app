@@ -1,6 +1,6 @@
 {
   "baseName": "admin@example.com",
-  "baseUrl": "https://localhost:5000",
+  "baseUrl": "",
   "connectPort": 9090,
   "status": {
     "deposits": {
