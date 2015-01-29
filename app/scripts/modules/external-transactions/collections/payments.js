@@ -94,6 +94,7 @@ var Payments = Backbone.Collection.extend({
     }
 
     this.fetch({
+      url: this.url + '?count=200',
       headers: {
         Authorization: session.get('credentials')
       },
