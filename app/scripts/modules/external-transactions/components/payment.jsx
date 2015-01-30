@@ -76,11 +76,11 @@ var Payment = React.createClass({
     var formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
-    var defaultPaymentDetailModel = _.defaults({
+    var defaultPaymentDetailModel = _.defaults({}, model, {
       ripple_transaction_id: 'none',
       invoice_id: 'none',
       memos: 'none'
-    }, model);
+    });
 
     // model.deposit, true === deposits, false === withdrawals
     var typeMap = {
