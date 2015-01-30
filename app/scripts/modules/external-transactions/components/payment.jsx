@@ -52,6 +52,10 @@ var Payment = React.createClass({
   //   });
   // },
 
+  setDefaults: function(a, b) {
+    return (_.isNull(a) || _.isUndefined(a)) ? b : a;
+  },
+
   getInitialState: function() {
     return {
       refreshIconClasses: '',
@@ -76,7 +80,7 @@ var Payment = React.createClass({
     var formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
-    var defaultPaymentDetailModel = _.defaults({}, model, {
+    var defaultPaymentDetailModel = _.merge(model || {}, {
       ripple_transaction_id: 'none',
       invoice_id: 'none',
       memos: 'none'
