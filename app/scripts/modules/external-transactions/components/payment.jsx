@@ -84,7 +84,7 @@ var Payment = React.createClass({
       ripple_transaction_id: 'none',
       invoice_id: 'none',
       memos: 'none'
-    });
+    }, this.setDefaults);
 
     // model.deposit, true === deposits, false === withdrawals
     var typeMap = {
