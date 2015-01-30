@@ -102,7 +102,7 @@ var PaymentCreate = React.createClass({
   buildAccountOptions: function(accounts) {
     return _.map(accounts, function(account) {
       return (
-        <option key={account.id} value={account.id}>{account.name} - {account.address}</option>
+        <option key={account.id} value={account.id}>{account.name} - {account.uid}</option>
       );
     });
   },

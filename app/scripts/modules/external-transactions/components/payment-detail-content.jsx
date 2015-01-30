@@ -32,7 +32,7 @@ var PaymentDetailContent = React.createClass({
           <div className="col-sm-6 col-xs-12">
             Source Account: {
               model.fromAccount ?
-                model.fromAccount.name + ' - ' + model.fromAccount.address
+                model.fromAccount.name + ' - ' + model.fromAccount.uid
                 : null
             }
           </div>
@@ -48,7 +48,7 @@ var PaymentDetailContent = React.createClass({
           <div className="col-sm-6 col-xs-12">
             Destination Account: {
               model.toAccount ?
-                model.toAccount.name + ' - ' + model.toAccount.address
+                model.toAccount.name + ' - ' + model.toAccount.uid
                 : null
             }
           </div>
