@@ -80,11 +80,18 @@ var Payment = React.createClass({
     var formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
-    var defaultPaymentDetailModel = _.merge(model || {}, {
+    var detailsDefaults = {
       ripple_transaction_id: 'none',
       invoice_id: 'none',
       memos: 'none'
-    }, this.setDefaults);
+    };
+
+    var formDefaults = {
+      invoice_id: null,
+      memos: null
+    };
+
+    var defaultPaymentDetailModel = _.merge(model || {}, detailsDefaults, this.setDefaults);
 
     // model.deposit, true === deposits, false === withdrawals
     var typeMap = {
@@ -104,7 +111,7 @@ var Payment = React.createClass({
             title={"Process Ripple to Bank Queued Transaction"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsDoneWithEdits, paymentActions.flagAsFailed]}
-            model={model} // converted to form model
+            model={_.merge(model, formDefaults)} // converted to form model without invoice id and memos in form
           />
         }>
           <button className="btn pull-right">
@@ -119,7 +126,7 @@ var Payment = React.createClass({
             title={"Process Bank to Ripple Invoice Transaction"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsInvoicePaid, paymentActions.flagAsFailed]}
-            model={model} // converted to form model
+            model={_.merge(model, formDefaults)} // converted to form model without invoice id and memos in form
           />
         }>
           <button className="btn pull-right">
