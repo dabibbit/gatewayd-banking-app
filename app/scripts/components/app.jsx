@@ -19,8 +19,12 @@ var Wallets = require('../modules/wallets/components/wallets.jsx');
 // required to use React Bootstrap in child modules
 require('react-bootstrap');
 
+var capitalize = function(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 var topBarConfig = {
-  brandName: 'Gatewayd Banking App',
+  brandName: capitalize(location.hostname) + ' | Gatewayd Banking App',
   wrapperClassName: 'navbar-inverse navbar-fixed-top top-bar container-fluid',
   links: [
     {
