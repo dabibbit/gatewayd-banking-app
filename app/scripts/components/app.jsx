@@ -24,7 +24,7 @@ var capitalize = function(str) {
 };
 
 var topBarConfig = {
-  brandName: capitalize(location.hostname) + ' | Gatewayd Banking App',
+  brandName: capitalize(location.hostname) + ' Banking Connector',
   wrapperClassName: 'navbar-inverse navbar-fixed-top top-bar container-fluid',
   links: [
     {
