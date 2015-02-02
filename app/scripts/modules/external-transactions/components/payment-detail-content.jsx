@@ -30,7 +30,7 @@ var PaymentDetailContent = React.createClass({
         <br />
         <div className="row">
           <div className="col-sm-6 col-xs-12">
-            Source Account: {
+            Debit Account: {
               model.fromAccount ?
                 model.fromAccount.name + ' - ' + model.fromAccount.uid
                 : null
@@ -46,7 +46,7 @@ var PaymentDetailContent = React.createClass({
         <br />
         <div className="row">
           <div className="col-sm-6 col-xs-12">
-            Destination Account: {
+            Credit Account: {
               model.toAccount ?
                 model.toAccount.name + ' - ' + model.toAccount.uid
                 : null

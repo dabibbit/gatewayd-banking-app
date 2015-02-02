@@ -99,8 +99,8 @@ var Payment = React.createClass({
       false: 'withdrawals'
     };
     var accountNameDirectionMap = {
-      true: 'Source',
-      false: 'Destination'
+      true: 'Sender',
+      false: 'Receiver'
     };
     var transactionType = typeMap[model.deposit];
 
@@ -123,14 +123,14 @@ var Payment = React.createClass({
       doneButton = (
         <ModalTrigger modal={
           <PaymentCreateModalForEditing
-            title={"Process Bank to Ripple Invoice Transaction"}
+            title={"Execute transfer and confirm final amounts"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsInvoicePaid, paymentActions.flagAsFailed]}
             model={_.merge(model, formDefaults)} // converted to form model without invoice id and memos in form
           />
         }>
           <button className="btn pull-right">
-            Process
+            Execute/Confirm Debit
           </button>
         </ModalTrigger>
       );
@@ -155,7 +155,7 @@ var Payment = React.createClass({
           </div>
           <div className="col-sm-3 col-xs-12">
             <p>
-              <span className="header">{accountNameDirectionMap[model.deposit]} Account: </span>
+              <span className="header">{accountNameDirectionMap[model.deposit]}: </span>
               <span className="data">{accountName}</span>
             </p>
           </div>

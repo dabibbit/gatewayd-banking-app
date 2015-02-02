@@ -208,7 +208,7 @@ var PaymentCreate = React.createClass({
       <div className="modal-footer">
         <div className="col-sm-12 col-sm-offset-1 col-xs-12 col-xs-offset-1">
           <h4>
-            How do you want to process this transaction?
+            Did the transaction complete as intended?
           </h4>
         </div>
         <div className="col-sm-12 col-sm-offset-2 col-xs-12 col-xs-offset-1">
@@ -218,14 +218,14 @@ var PaymentCreate = React.createClass({
               bsSize="large"
               type="submit"
             >
-              <span className="glyphicon glyphicon-thumbs-up" /> Clear
+              <span className="glyphicon glyphicon-thumbs-up" /> Succeeded
             </Button>
             <Button
               bsStyle="danger"
               bsSize="large"
               onClick={this.handleSecondarySubmit}
             >
-              <span className="glyphicon glyphicon-thumbs-down" /> Fail
+              <span className="glyphicon glyphicon-thumbs-down" /> Failed
             </Button>
             <a onClick={this.hideForm}>
               <span> cancel</span>

@@ -152,21 +152,21 @@ var Payments = React.createClass({
         <div>
           <div className="row">
             <div className="col-sm-12 col-xs-12">
-              <h1>Transactions:
+              <h1>
                 <span className="header-links">
                   <Link
                     to='transactions'
                     params={{transactionType: 'withdrawals', state: 'all'}}
                     className={this.isActive('transactions', {transactionType: 'withdrawals'}) ? 'active' : ''}
                   >
-                    Ripple to Bank
+                    Pull Debits
                   </Link>
                   <Link
                     to='transactions'
                     params={{transactionType: 'deposits', state: 'all'}}
                     className={this.isActive('transactions', {transactionType: 'deposits'}) ? 'active' : ''}
                   >
-                    Bank to Ripple
+                    Push Credits
                   </Link>
                 </span>
               </h1>

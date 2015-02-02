@@ -6,44 +6,44 @@
       "invoice": {
         "name": "invoice",
         "navTitle": "Invoice",
-        "message": "Waiting for incoming transaction"
+        "message": "Ready to debit sender"
       },
       "queued": {
         "name": "queued",
         "navTitle": "Queued",
-        "message": "Processing transaction"
+        "message": "Sending Ripple payment"
       },
       "processed": {
         "name": "processed",
         "navTitle": "Processed",
-        "message": "Transaction cleared"
+        "message": "Outgoing transfer sent"
       },
       "failed": {
         "name": "failed",
         "navTitle": "Failed",
-        "message": "Transaction failed"
+        "message": "Sender debit failed"
       }
     },
     "withdrawals": {
       "invoice": {
         "name": "invoice",
         "navTitle": "Invoice",
-        "message": "Waiting for incoming transaction"
+        "message": "Awaiting Ripple payment"
       },
       "queued": {
         "name": "queued",
         "navTitle": "Queued",
-        "message": "Waiting for transaction to be processed"
+        "message": "Ready to credit receiver"
       },
       "succeeded": {
         "name": "succeeded",
         "navTitle": "Succeeded",
-        "message": "Transaction cleared"
+        "message": "Incoming transfer delivered"
       },
       "failed": {
         "name": "failed",
         "navTitle": "Failed",
-        "message": "Transaction failed"
+        "message": "Receiver credit failed"
       }
     }
   }
