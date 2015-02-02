@@ -168,15 +168,6 @@ var Payments = React.createClass({
                   >
                     Bank to Ripple
                   </Link>
-                  <ModalTrigger modal={
-                    <PaymentCreateModal
-                      title={"Record Transaction"}
-                      formType={"newPayment"}
-                      submitActions={[paymentActions.sendPaymentAttempt]}
-                    />
-                  }>
-                    <a>Record Transaction</a>
-                  </ModalTrigger>
                 </span>
               </h1>
             </div>
