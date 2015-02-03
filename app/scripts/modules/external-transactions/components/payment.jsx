@@ -87,6 +87,7 @@ var Payment = React.createClass({
     };
 
     var formDefaults = {
+      ripple_transaction_id: null,
       invoice_id: null,
       memos: null
     };
