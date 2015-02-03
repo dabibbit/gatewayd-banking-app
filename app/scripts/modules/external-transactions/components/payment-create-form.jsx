@@ -344,16 +344,7 @@ var PaymentCreate = React.createClass({
           </Col>
         </Row>
 
-        <Input type="text" ref={invoice_id.refName}
-          label="Invoice Id:"
-          bsStyle={this.validationMap[invoice_id.inputState]}
-          disabled={this.state.disableForm}
-          onBlur={this.validateField.bind(this, invoice_id.refName)}
-          onChange={this.handleChange.bind(this, invoice_id.refName)}
-              value={invoice_id.value}
-          hasFeedback
-        />
-        {this.errorMessageLabel(invoice_id.errorMessage)}
+        <Input type="hidden" ref={invoice_id.refName} value={invoice_id.value} />
 
         <Input type="textarea" ref={memos.refName}
           label="Memos:"
