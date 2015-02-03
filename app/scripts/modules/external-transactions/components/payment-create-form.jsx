@@ -77,6 +77,7 @@ var PaymentCreate = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
 
+
     var payment = this.buildFormObject(this.refs);
 
     this.setState({

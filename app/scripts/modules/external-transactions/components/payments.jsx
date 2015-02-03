@@ -159,14 +159,14 @@ var Payments = React.createClass({
                     params={{transactionType: 'withdrawals', state: 'all'}}
                     className={this.isActive('transactions', {transactionType: 'withdrawals'}) ? 'active' : ''}
                   >
-                    Pull Debits
+                    Receiver Credits
                   </Link>
                   <Link
                     to='transactions'
                     params={{transactionType: 'deposits', state: 'all'}}
                     className={this.isActive('transactions', {transactionType: 'deposits'}) ? 'active' : ''}
                   >
-                    Push Credits
+                    Sender Debits
                   </Link>
                 </span>
               </h1>

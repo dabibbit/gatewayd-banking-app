@@ -91,7 +91,7 @@ var Payment = React.createClass({
       memos: null
     };
 
-    var defaultPaymentDetailModel = _.merge(model || {}, detailsDefaults, this.setDefaults);
+    var defaultPaymentDetailModel = _.merge(model, detailsDefaults, this.setDefaults);
 
     // model.deposit, true === deposits, false === withdrawals
     var typeMap = {
@@ -115,7 +115,7 @@ var Payment = React.createClass({
           />
         }>
           <button className="btn pull-right">
-            Process
+            Execute/Confirm Debit
           </button>
         </ModalTrigger>
       );
