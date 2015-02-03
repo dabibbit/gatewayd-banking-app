@@ -7,6 +7,8 @@ var packageConfig = require('./package.json');
 var NAME = packageConfig.name;
 var posix = require('posix');
 
+var appConfig = require('./app-config');
+
 // todo: clean this up and modularize with variable file name/path
 // handle secrets. Make npm module for this in the future
 var secrets = {};
@@ -401,7 +403,8 @@ gulp.task('ssh-rollback', function() {
 
 gulp.task('connect', function() {
   connect.server({
-    root: paths.dist
+    root: paths.dist,
+    port: appConfig.connectPort || 8080
   });
 });
 
