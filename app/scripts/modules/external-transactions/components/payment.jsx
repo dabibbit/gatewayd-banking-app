@@ -92,7 +92,9 @@ var Payment = React.createClass({
       memos: null
     };
 
-    var defaultPaymentDetailModel = _.merge(model, detailsDefaults, this.setDefaults);
+    var defaultPaymentDetailModel = _.merge({}, model, detailsDefaults, this.setDefaults);
+
+    var defaultPaymentFormModel = _.merge({}, model, formDefaults, this.setDefaults);
 
     // model.deposit, true === deposits, false === withdrawals
     var typeMap = {
@@ -112,7 +114,7 @@ var Payment = React.createClass({
             title={"Process Ripple to Bank Queued Transaction"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsDoneWithEdits, paymentActions.flagAsFailed]}
-            model={_.merge(model, formDefaults)} // converted to form model without invoice id and memos in form
+            model={defaultPaymentFormModel}
           />
         }>
           <button className="btn pull-right">
@@ -127,7 +129,7 @@ var Payment = React.createClass({
             title={"Execute transfer and confirm final amounts"}
             formType={"editPayment"}
             submitActions={[paymentActions.flagAsInvoicePaid, paymentActions.flagAsFailed]}
-            model={_.merge(model, formDefaults)} // converted to form model without invoice id and memos in form
+            model={defaultPaymentFormModel}
           />
         }>
           <button className="btn pull-right">
