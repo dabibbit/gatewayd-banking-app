@@ -29,29 +29,6 @@ var Payments = React.createClass({
 
   mixins: [IntlMixin, ActiveState, Router.State],
 
-  // TODO - remove this when from/toAccount.name include gateway account and external account id
-  fetchAccounts: function() {
-    var _this = this;
-
-    $.ajax({
-      type: 'GET',
-      url: session.get('gatewaydUrl') + path.join('/', 'v1/external_accounts'),
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader ('Authorization', session.get('credentials'));
-      }
-    }).done(function(data) {
-      var gatewayAccount;
-
-      data = data.external_accounts;
-
-      _this.setState({
-        accounts: data
-      });
-    }).fail(function(jqHXR, status) {
-      console.warn('Account Fetch Failed:', status);
-    });
-  },
-
   getInitialState: function() {
 
     // TODO - separate the backbone collection from the state and retrieve only its JSON representation
