@@ -29,19 +29,7 @@ var Greeting = React.createClass({
 
   handleLoggedIn: function() {
     return (
-      <div className="greeting">
-        <span className="welcome">
-          <FormattedMessage
-            name={this.props.userName}
-            message={this.getIntlMessage('topbarGreeting')}
-          />
-        </span>
-        <Link to="/logout" className="link">
-          <FormattedMessage
-            message={this.getIntlMessage('topbarLogout')}
-          />
-        </Link>
-      </div>
+      <div className="greeting" />
     );
   },
 
