@@ -19,7 +19,7 @@ Features:
 - **[Dependencies For Compatibility With Quoting App](#dependencies-for-compatibility-with-quoting-app)**
 - **[How To Set Up For Compatibility With Quoting App](#how-to-set-up-for-compatibility-with-quoting-app)**
 
-## How To Set Up:
+## How To Set Up
 
 1. [Start up your gateway](https://ripple.com/build/gatewayd/#gatewayd-usage).
 
@@ -41,7 +41,7 @@ Features:
 
 _* If admin@example.com does not work as the username, check_ **/config/config.json** _or_ **/config/environment.js** _in gatewayd and append admin@ with the value of the DOMAIN property._
 
-## How To Use:
+## How To Use
 
 1. Navigate the links to filter between the Transactions and Accounts sections as well as the transaction/account types and statuses.
 
@@ -59,7 +59,7 @@ _* If admin@example.com does not work as the username, check_ **/config/config.j
 
 7. Payments will be constantly refreshed while the app's tab/window is active/open.
 
-## Developers - Getting Started:
+## Developers
 
 1. Clone the app repo from [Github](https://github.com/gatewayd/gatewayd-banking-app):
 
@@ -122,6 +122,7 @@ never commit or share your private information.
 "npm run deploy" and "npm run rollback" are the possible commands.
 
 ## Dependencies For Compatibility With Quoting App
+
 [Gatewayd - develop branch](https://github.com/ripple/gatewayd/tree/develop)
 
 ```
