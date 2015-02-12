@@ -35,6 +35,9 @@ var merge = require('merge-stream');
 var browserify = require('browserify');
 var del = require('del');
 var reactify = require('reactify');
+var reactifyES6 = function(file) {
+  return reactify(file, {'es6': true});
+};
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
@@ -280,7 +283,7 @@ gulp.task('js', function() {
 
   // Browserify/bundle the JS.
   return browserify(paths.main_js)
-    .transform(reactify)
+    .transform(reactifyES6)
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
@@ -418,6 +421,7 @@ gulp.task('watch', function() {
   gulp.watch('./app/styles/**/*.scss', ['sass']);
   gulp.watch('./app/*.html', ['copy']);
   gulp.watch('./app/scripts/**/*.js', ['js']);
+  gulp.watch('./app/i18n/**/*.js', ['js']);
   gulp.watch('./app/scripts/**/*.jsx', ['js']);
   gulp.watch('./app/scripts/**/*.json', ['js']);
   gulp.watch('./dist/' + '**/*.{html,css,js}').on('change', function() {
