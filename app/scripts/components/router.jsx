@@ -1,5 +1,7 @@
 "use strict";
 
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
 var React = require('react');
 
 // needed for dev tools to work
@@ -36,12 +38,12 @@ var pollWhenActive = function() {
 // poll every 5 seconds
 pollingHeart.onBeat(5, pollWhenActive);
 
-window.onfocus = function() {
+window.onfocus = () => {
   pollingHeart.clearEvents();
   pollingHeart.onBeat(5, pollWhenActive);
 };
 
-window.onblur = function() {
+window.onblur = () => {
   pollingHeart.onBeat(60 * 5, pollingHeart.clearEvents);
 };
 
@@ -52,7 +54,8 @@ var logoutPath = '/logout';
 var defaultPath = '/transactions/withdrawals/all';
 
 var AppModule = React.createClass({
-  mixins: [Navigation],
+
+  mixins: [IntlMixin, Navigation],
 
   getLogStatus: function(sessionModel) {
     return sessionModel.isLoggedIn();
