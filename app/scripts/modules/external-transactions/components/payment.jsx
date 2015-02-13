@@ -1,11 +1,15 @@
 "use strict";
 
+var stringLib = require('../../../../i18n/messages');
 var _ = require('lodash');
 var moment = require('moment');
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
 var paymentCreateModel = require('../models/payment-create');
-var PaymentCreateModalForEditing = require('./payment-create-modal.jsx');
+var PaymentEditModal = require('./payment-create-modal.jsx');
 var PaymentDetailContent = require('./payment-detail-content.jsx');
 var paymentActions = require('../actions');
 var Chevron = require('../../../shared/components/glyphicon/chevron.jsx');
@@ -13,20 +17,24 @@ var currencyPrecision = require('../../../shared/currency-precision');
 var appConfig = require('../../../../../app-config');
 
 var Payment = React.createClass({
+
+  mixins: [IntlMixin],
+
   propTypes: {
     model: React.PropTypes.object
   },
 
   statusMap: {},
 
+  //todo: move this to a parse in the store
   buildStatusMap: function() {
     var statusMap = {};
 
     // transactionType === withdrawals or deposits
-    _.each(appConfig.status, function(statusCollection, transactionType) {
+    _.each(appConfig.status, (statusCollection, transactionType) => {
       statusMap[transactionType] = {};
 
-      _.each(statusCollection, function(statusDetails, statusName) {
+      _.each(statusCollection, (statusDetails, statusName) => {
         statusMap[transactionType][statusName] = statusDetails.message;
       });
     });
@@ -40,106 +48,93 @@ var Payment = React.createClass({
     });
   },
 
-  // showSpinningIcon: function() {
-  //   this.setState({
-  //     refreshIconClasses: 'glyphicon glyphicon-refresh glyphicon-spin'
-  //   });
-  // },
-
-  // hideSpinningIcon: function() {
-  //   this.setState({
-  //     refreshIconClasses: ''
-  //   });
-  // },
-
   setDefaults: function(a, b) {
     return (_.isNull(a) || _.isUndefined(a)) ? b : a;
   },
 
   getInitialState: function() {
     return {
-      refreshIconClasses: '',
       showDetails: false
     };
   },
 
   componentWillMount: function() {
-    // this.props.model.on('pollingStart', this.showSpinningIcon);
-    // this.props.model.on('pollingStop', this.hideSpinningIcon);
     this.statusMap = this.buildStatusMap();
   },
 
-  componentWillUnmount: function() {
-    // this.props.model.off('pollingStart pollingStop');
+  getDirectionHeader: function(isDeposit) {
+    var key = isDeposit ? 'transactionSender' : 'transactionReceiver';
+
+    return <FormattedMessage message={this.getIntlMessage(key)}/>;
+  },
+
+  getDoneButton: function(model) {
+    var button = false,
+        submitActions = [paymentActions.flagAsFailed],
+        titleKey = '';
+
+    //only display if deposit && invoice, OR
+    //!deposit and queued
+    if (model.deposit && model.status === 'invoice') {
+      button = true;
+      titleKey = "transactionDoneButtonTitle2";
+      submitActions.unshift(paymentActions.flagAsInvoicePaid);
+    } else if (!model.deposit && model.status === 'queued') {
+      button = true;
+      submitActions.unshift(paymentActions.flagAsDoneWithEdits);
+      titleKey = "transactionDoneButtonTitle1";
+    }
+
+    return button ? (
+      <ModalTrigger
+        modal={
+          <PaymentEditModal
+            {...stringLib}
+            titleKey={titleKey}
+            formType={"editPayment"}
+            submitActions={submitActions}
+            model={model}
+          />
+        }>
+        <button className="btn pull-right">
+          <FormattedMessage
+            message={this.getIntlMessage('transactionDoneButtonText')} />
+        </button>
+      </ModalTrigger>
+    ) : false;
   },
 
   render: function() {
-    var _this = this;
-    var doneButton, refreshIcon, accountName;
-    var model = this.props.model;
-    var formattedDestinationAmount = currencyPrecision(
+    var model = this.props.model,
+        formattedDestinationAmount, detailsDefaults, formDefaults,
+        defaultPaymentDetailModel, defaultPaymentFormModel, accountName;
+
+    formattedDestinationAmount = currencyPrecision(
       model.destination_currency, model.destination_amount);
 
-    var detailsDefaults = {
+    detailsDefaults = {
       ripple_transaction_id: 'none',
       invoice_id: 'none',
       memos: 'none'
     };
 
-    var formDefaults = {
+    formDefaults = {
       ripple_transaction_id: null,
       invoice_id: null,
       memos: null
     };
 
-    var defaultPaymentDetailModel = _.merge({}, model, detailsDefaults, this.setDefaults);
+    defaultPaymentDetailModel = _.merge({}, model, detailsDefaults, this.setDefaults);
+    defaultPaymentFormModel = _.merge({}, model, formDefaults, this.setDefaults);
 
-    var defaultPaymentFormModel = _.merge({}, model, formDefaults, this.setDefaults);
-
-    // model.deposit, true === deposits, false === withdrawals
+    //todo - clean all this up. This abstraction is messy here
+    //model.deposit, true === deposits, false === withdrawals
     var typeMap = {
       true: 'deposits',
       false: 'withdrawals'
     };
-    var accountNameDirectionMap = {
-      true: 'Sender',
-      false: 'Receiver'
-    };
-    var transactionType = typeMap[model.deposit];
 
-    if (transactionType === 'withdrawals' && model.status === appConfig.status.withdrawals.queued.name) {
-      doneButton = (
-        <ModalTrigger modal={
-          <PaymentCreateModalForEditing
-            title={"Process Ripple to Bank Queued Transaction"}
-            formType={"editPayment"}
-            submitActions={[paymentActions.flagAsDoneWithEdits, paymentActions.flagAsFailed]}
-            model={defaultPaymentFormModel}
-          />
-        }>
-          <button className="btn pull-right">
-            Execute/Confirm Debit
-          </button>
-        </ModalTrigger>
-      );
-    } else if (transactionType === 'deposits' && model.status === appConfig.status.deposits.invoice.name) {
-      doneButton = (
-        <ModalTrigger modal={
-          <PaymentCreateModalForEditing
-            title={"Execute transfer and confirm final amounts"}
-            formType={"editPayment"}
-            submitActions={[paymentActions.flagAsInvoicePaid, paymentActions.flagAsFailed]}
-            model={defaultPaymentFormModel}
-          />
-        }>
-          <button className="btn pull-right">
-            Execute/Confirm Debit
-          </button>
-        </ModalTrigger>
-      );
-    } else {
-      doneButton = false;
-    }
+    var transactionType = typeMap[model.deposit];
 
     if (transactionType === 'deposits') {
       accountName = model.fromAccount ? model.fromAccount.name : null;
@@ -152,48 +147,53 @@ var Payment = React.createClass({
         <div className="row">
           <div className="col-sm-3 col-xs-12">
             <p>
-              <span className="header">Id: </span>
+              <span className="header">
+                <FormattedMessage message={this.getIntlMessage('transactionId')} />
+              </span>
               <span className="data">{model.id} </span>
             </p>
           </div>
           <div className="col-sm-3 col-xs-12">
             <p>
-              <span className="header">{accountNameDirectionMap[model.deposit]}: </span>
+              <span className="header">
+                {this.getDirectionHeader(model.deposit)}
+              </span>
               <span className="data">{accountName}</span>
             </p>
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
             <p>
-              <span className="header">Amount: </span>
+              <span className="header">
+                <FormattedMessage message={this.getIntlMessage('transactionAmount')} />
+              </span>
               <span className="data">{formattedDestinationAmount} </span>
               <span className="currency">{model.destination_currency}</span>
             </p>
           </div>
           <div className="col-sm-3 col-xs-12 text-right">
             <p>
-              <span className="header">Status: </span>
+              <span className="header">
+                <FormattedMessage message={this.getIntlMessage('transactionStatus')} />
+              </span>
               <span className="data">
                 {this.statusMap[transactionType][model.status]}
               </span>
-              <span className={this.state.refreshIconClasses} />
             </p>
-            {doneButton}
+            {this.getDoneButton(defaultPaymentFormModel)}
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-8">
+          <div className="col-sm-4 col-xs-12">
+            <span className="date pull-left">
+              {moment(model.createdAt).format('MMM D, YYYY HH:mm z')}
+            </span>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-1 col-xs-12 pull-right">
+            <Chevron
+              clickHandler={this.handleDetailIconClick.bind(this, model.id)}
+              iconClasses="pull-right"
+            />
           </div>
-        </div>
-        <div className="clearfix">
-          <span className="date pull-left">
-            {moment(model.createdAt).format('MMM D, YYYY HH:mm z')}
-          </span>
-          <Chevron
-            clickHandler={this.handleDetailIconClick.bind(this, model.id)}
-            iconClasses="pull-right"
-          />
         </div>
         <div>
           {this.state.showDetails ?

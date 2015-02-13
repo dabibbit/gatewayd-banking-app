@@ -4,6 +4,9 @@ var _ = require('lodash');
 var url = require('url');
 var Backbone= require('backbone');
 
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var DocumentTitle = require('react-document-title');
 
@@ -28,7 +31,8 @@ var AccountCreateForm = require('./account-create.jsx');
 
 
 var Accounts = React.createClass({
-  mixins: [ActiveState, Router.State],
+
+  mixins: [IntlMixin, ActiveState, Router.State],
 
   getInitialState: function() {
 
@@ -65,14 +69,17 @@ var Accounts = React.createClass({
   },
 
   createTitle: function(accountType) {
-    accountType = accountType || 'Accounts';
+    var titleKey = "titleAccountsAll",
+        titleMap = {
+          customer: 'titleAccountsCustomer',
+          gateway: 'titleAccountsGateway'
+        };
 
-    var titleMap = {
-      customer: 'Customer Accounts',
-      gateway: 'Gateway Accounts'
-    };
+    if (accountType && titleMap[accountType]) {
+      titleKey = titleMap[accountType];
+    }
 
-    return titleMap[accountType];
+    return this.getIntlMessage(titleKey);
   },
 
   typeMap: {
@@ -81,16 +88,15 @@ var Accounts = React.createClass({
   },
 
   render: function() {
-    var _this = this,
-        accountType = this.getParams().accountType;
+    var accountType = this.getParams().accountType;
 
     // less than ideal, will refactor when we have pagination, if not sooner.
     // We could keep different collections for each type, but it depends on use case.
     var paymentItems = _.chain(this.state.accounts)
-      .filter(function(model) {
-        return accountType === 'all' || _this.typeMap[model.type] === accountType;
+      .filter(model => {
+        return accountType === 'all' || this.typeMap[model.type] === accountType;
       })
-      .map(function(model) {
+      .map(model => {
         return (
           <AccountItem
             key={model.id}
@@ -104,19 +110,22 @@ var Accounts = React.createClass({
         <div>
           <div className="row">
             <div className="col-sm-12 col-xs-12">
-              <h1>Accounts:
+              <h1>
+                <FormattedMessage message={this.getIntlMessage('accountsHeader')} />
                 <span className="header-links">
                   <Link to='accounts' params={{accountType: 'all'}}>
-                    All
+                    <FormattedMessage message={this.getIntlMessage('accountsNavAll')} />
                   </Link>
                   <Link to='accounts' params={{accountType: 'gateway'}}>
-                    Gateway
+                    <FormattedMessage message={this.getIntlMessage('accountsNavGateway')} />
                   </Link>
                   <Link to='accounts' params={{accountType: 'customer'}}>
-                    Customer
+                    <FormattedMessage message={this.getIntlMessage('accountsNavCustomer')} />
                   </Link>
                   <ModalTrigger modal={<AccountCreateForm model={accountCreateFormModel} />}>
-                    <a>Create</a>
+                    <a>
+                      <FormattedMessage message={this.getIntlMessage('accountsNavCreate')} />
+                    </a>
                   </ModalTrigger>
                 </span>
               </h1>

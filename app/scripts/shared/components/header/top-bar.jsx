@@ -1,5 +1,8 @@
 "use strict";
 
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var Branding = require('./branding.jsx');
 var NavLinks = require('./nav-links.jsx');
@@ -7,14 +10,13 @@ var Greeting = require('./greeting.jsx');
 var session = require('../../../modules/session/models/session');
 
 var TopBar = React.createClass({
+
+  mixins: [IntlMixin],
+
   getDefaultProps: function() {
     return {
       brandName: 'Hello World',
       wrapperClassName: 'navbar',
-      links: [{
-        text: 'Login',
-        href: '/login'
-      }],
       isLoggedIn: false,
       userName: ''
     };
@@ -54,13 +56,12 @@ var TopBar = React.createClass({
           brandName={this.props.brandName}
           wrapperClassName={this.props.brandingClassName}
         />
-        <
-          Greeting
-            greetingClassName={"greeting-wrapper"}
-            isLoggedIn={this.props.isLoggedIn}
-            userName={this.props.userName}
+        <Greeting
+          greetingClassName={"greeting-wrapper"}
+          isLoggedIn={this.props.isLoggedIn}
+          userName={this.props.userName}
         />
-        { session.isLoggedIn() ? nav : false}
+        {session.isLoggedIn() ? nav : false}
       </div>
     );
   }

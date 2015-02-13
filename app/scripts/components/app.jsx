@@ -1,5 +1,7 @@
 "use strict";
 
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
 var React = require('react');
 
 // React Router
@@ -22,81 +24,83 @@ var topBarConfig = {
   wrapperClassName: 'navbar-inverse navbar-fixed-top top-bar container-fluid',
   links: [
     {
-      text: 'Transactions',
+      key: 'topbarNavTransactions',
       href: '/transactions/withdrawals/all'
     },
     {
-      text: 'Accounts',
+      key: 'topbarNavAccounts',
       href: '/accounts/all'
     }
   ]
 };
 
-var App =
-  React.createClass({
-    propTypes: {
-      isLoggedIn: React.PropTypes.bool,
-      userName: React.PropTypes.string,
-      loginPath: React.PropTypes.string,
-      defaultPath: React.PropTypes.string
-    },
+var App = React.createClass({
 
-    getDefaultProps: function() {
-      return {
-        isLoggedIn: false,
-        userName: '',
-        loginPath: '/',
-        defaultPath: '/'
-      };
-    },
+  mixins: [IntlMixin],
 
-    getInitialState: function() {
-      return { showSidebar: false };
-    },
+  propTypes: {
+    isLoggedIn: React.PropTypes.bool,
+    userName: React.PropTypes.string,
+    loginPath: React.PropTypes.string,
+    defaultPath: React.PropTypes.string
+  },
 
-    expandSidebar: function() {
-      if (this.props.isLoggedIn) {
-        this.setState({showSidebar: this.state.showSidebar ? false : true});
-      } else {
-        this.setState({showSidebar: false});
-      }
-    },
+  getDefaultProps: function() {
+    return {
+      isLoggedIn: false,
+      userName: '',
+      loginPath: '/',
+      defaultPath: '/'
+    };
+  },
 
-    render:function(){
-      if (!this.props.isLoggedIn) {
+  getInitialState: function() {
+    return { showSidebar: false };
+  },
 
-        // attempt session restoration
-        sessionActions.restore();
-      }
+  expandSidebar: function() {
+    if (this.props.isLoggedIn) {
+      this.setState({showSidebar: this.state.showSidebar ? false : true});
+    } else {
+      this.setState({showSidebar: false});
+    }
+  },
 
-      return (
-        <div>
-          <TopBar
-            links={topBarConfig.links}
-            brandName={topBarConfig.brandName}
-            wrapperClassName={topBarConfig.wrapperClassName}
-            expandSidebar={this.expandSidebar}
-            userName={this.props.userName}
-            isLoggedIn={this.props.isLoggedIn}
-          />
-          {this.state.showSidebar ?
-            <Sidebar sidebarClassName="sidebar sidebar-wallets">
-              <Wallets />
-            </Sidebar>
-            : false
-          }
-          <div className="container">
-            <div className="row">
-              <div className="col-sm-12 col-md-12 main">
-              <DocumentTitle title="Gatewayd Basic Admin">
+  render: function() {
+    if (!this.props.isLoggedIn) {
+
+      // attempt session restoration
+      sessionActions.restore();
+    }
+
+    return (
+      <div>
+        <TopBar
+          links={topBarConfig.links}
+          brandName={topBarConfig.brandName}
+          wrapperClassName={topBarConfig.wrapperClassName}
+          expandSidebar={this.expandSidebar}
+          userName={this.props.userName}
+          isLoggedIn={this.props.isLoggedIn}
+        />
+        {this.state.showSidebar ?
+          <Sidebar sidebarClassName="sidebar sidebar-wallets">
+            <Wallets />
+          </Sidebar>
+          : false
+        }
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-12 col-md-12 main">
+              <DocumentTitle title={this.getIntlMessage('titleDefault')}>
                 <RouteHandler />
               </DocumentTitle>
-              </div>
             </div>
           </div>
         </div>
-      )
-    }
+      </div>
+    )
+  }
 });
 
 module.exports = App;

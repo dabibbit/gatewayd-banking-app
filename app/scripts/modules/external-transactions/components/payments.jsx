@@ -4,6 +4,9 @@ var _ = require('lodash');
 var url = require('url');
 var Backbone= require('backbone');
 
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var DocumentTitle = require('react-document-title');
 
@@ -14,20 +17,17 @@ var Link = require('react-router').Link;
 
 
 // React Bootstrap
-var ModalTrigger = require('react-bootstrap').ModalTrigger;
-
 var paymentActions = require('../actions');
 var PaymentItem = require('./payment.jsx');
 
 var Collection = require('../collections/payments');
 var collection = new Collection();
 
-var PaymentCreateModal = require('./payment-create-modal.jsx');
-
 var appConfig = require('../../../../../app-config');
 
 var Payments = React.createClass({
-  mixins: [ActiveState, Router.State],
+
+  mixins: [IntlMixin, ActiveState, Router.State],
 
   getInitialState: function() {
 
@@ -60,11 +60,11 @@ var Payments = React.createClass({
     transactionType = transactionType || 'Deposits';
 
     var titleMap = {
-      deposits: 'Deposits',
-      withdrawals: 'Withdrawals'
+      deposits: 'titleDeposits',
+      withdrawals: 'titleWithdrawals'
     };
 
-    return titleMap[transactionType];
+    return this.getIntlMessage(titleMap[transactionType]);
   },
 
   transactionTypeMap: {
@@ -79,14 +79,14 @@ var Payments = React.createClass({
     var navigationInfoMap = {};
 
     // transactionType === withdrawals or deposits
-    _.each(appConfig.status, function(statusCollection, transactionType) {
+    _.each(appConfig.status, (statusCollection, transactionType) => {
 
       // navigation includes all 'status' to display every transaction of specific type
       navigationInfoMap[transactionType] = {
-        all: 'All'
+        all: 'transactionFilterAll'
       };
 
-      _.each(statusCollection, function(statusDetails, statusName) {
+      _.each(statusCollection, (statusDetails, statusName) => {
         navigationInfoMap[transactionType][statusName] = statusDetails.navTitle;
       });
     });
@@ -95,21 +95,20 @@ var Payments = React.createClass({
   },
 
   buildNavigation: function(navigationInfoMap, transactionType) {
-    var _this = this;
-    var links = _.map(navigationInfoMap[transactionType], function(linkLabel, transactionState) {
-      var activeStateClass = '';
-      var params = {
-        transactionType: transactionType,
-        state: transactionState
-      };
+    var links = _.map(navigationInfoMap[transactionType], (linkLabel, transactionState) => {
+      var activeClass = '',
+          params = {
+            transactionType: transactionType,
+            state: transactionState
+          };
 
-      if (_this.isActive('transactions', transactionState)) {
+      if (this.isActive('transactions', transactionState)) {
         activeClass = 'active';
       }
 
       return (
-        <Link key={_.uniqueId()} to='transactions' params={params} className={activeStateClass}>
-          {linkLabel}
+        <Link key={_.uniqueId()} to='transactions' params={params} className={activeClass}>
+          <FormattedMessage message={this.getIntlMessage(linkLabel)} />
         </Link>
       );
     });
@@ -122,28 +121,27 @@ var Payments = React.createClass({
   },
 
   render: function() {
-    var _this = this,
-        transactionType = this.getParams().transactionType,
+    var transactionType = this.getParams().transactionType,
         state = this.getParams().state,
-        tertiaryNav;
+        tertiaryNav, paymentItems;
 
     // less than ideal, will refactor when we have pagination, if not sooner.
     // We could keep different collections for each type, but it depends on use case.
-    var paymentItems = _.chain(this.state.payments)
-      .filter(function(model) {
-        return model.deposit === _this.transactionTypeMap[transactionType];
+    paymentItems = _.chain(this.state.payments)
+      .filter(model => {
+        return model.deposit === this.transactionTypeMap[transactionType];
       })
-      .filter(function(model) {
+      .filter(model => {
         return state === 'all'? true : model.status === state;
       })
-      .map(function(model) {
+      .map(model => {
         return (
           <PaymentItem
             key={model.id}
             model={model}
           />
         );
-    }, this);
+      }, this);
 
     tertiaryNav = this.buildNavigation(this.navigationInfoMap, transactionType);
 
@@ -159,14 +157,14 @@ var Payments = React.createClass({
                     params={{transactionType: 'withdrawals', state: 'all'}}
                     className={this.isActive('transactions', {transactionType: 'withdrawals'}) ? 'active' : ''}
                   >
-                    Receiver Credits
+                    <FormattedMessage message={this.getIntlMessage('transactionNavCredits')} />
                   </Link>
                   <Link
                     to='transactions'
                     params={{transactionType: 'deposits', state: 'all'}}
                     className={this.isActive('transactions', {transactionType: 'deposits'}) ? 'active' : ''}
                   >
-                    Sender Debits
+                    <FormattedMessage message={this.getIntlMessage('transactionNavDebits')} />
                   </Link>
                 </span>
               </h1>

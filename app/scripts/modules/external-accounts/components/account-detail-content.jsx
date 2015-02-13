@@ -1,17 +1,27 @@
 "use strict";
 
 var moment = require('moment');
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 
 var AccountDetailContent = React.createClass({
+
+  mixins: [IntlMixin],
+
   propTypes: {
     model: React.PropTypes.object,
     accountDetailClassName: React.PropTypes.string
   },
 
   typeMap: {
-    acct: 'customer',
-    gateway: 'gateway'
+    acct: 'accountCustomer',
+    gateway: 'accountGateway'
+  },
+
+  getDefaultString: function(str) {
+    return str || <FormattedMessage message={this.getIntlMessage('noData')} />
   },
 
   render: function() {
@@ -20,31 +30,46 @@ var AccountDetailContent = React.createClass({
     return (
       <div className={this.props.accountDetailClassName}>
         <div className="row border-bottom">
-          Updated {moment(model.updatedAt).format('MMM D, YYYY HH:mm z')}
-        </div>
-        <br />
-        <div className="row">
-          Account Id: {model.id}
-        </div>
-        <br />
-        <div className="row">
-          Bank Account Number: {model.uid || 'none'}
-        </div>
-        <br />
-        <div className="row">
           <div className="col-sm-4 col-xs-12">
-            Name: {model.name || 'none'}
-          </div>
-          <div className="col-sm-4 col-xs-12">
-            Federation Address: {model.address}
-          </div>
-          <div className="col-sm-4 col-xs-12">
-            Type: {this.typeMap[model.type]}
+            <FormattedMessage message={this.getIntlMessage('accountUpdated')} />
+            {moment(model.updatedAt).format('MMM D, YYYY HH:mm z')}
+            <br />
           </div>
         </div>
-        <br />
         <div className="row">
-          Bank Name: {model.data || 'none'}
+          <div className="col-sm-4 col-xs-12">
+            <FormattedMessage message={this.getIntlMessage('accountId')} />
+            {model.id}
+            <br />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-4 col-xs-12">
+            <FormattedMessage message={this.getIntlMessage('accountBankAccount')} />
+            {this.getDefaultString(model.uid)}
+            <br />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-4 col-xs-12">
+            <FormattedMessage message={this.getIntlMessage('accountName')} />
+            {this.getDefaultString(model.name)}
+          </div>
+          <div className="col-sm-4 col-xs-12">
+            <FormattedMessage message={this.getIntlMessage('accountFederationAddress')} />
+            {this.getDefaultString(model.address)}
+          </div>
+          <div className="col-sm-4 col-xs-12">
+            <FormattedMessage message={this.getIntlMessage('accountType')} />
+            <FormattedMessage message={this.getIntlMessage(this.typeMap[model.type])} />
+            <br />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-4 col-xs-12">
+            <FormattedMessage message={this.getIntlMessage('accountBankName')} />
+            {this.getDefaultString(model.data)}
+          </div>
         </div>
       </div>
     );

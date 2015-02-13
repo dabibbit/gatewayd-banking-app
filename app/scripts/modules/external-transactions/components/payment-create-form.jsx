@@ -3,6 +3,9 @@
 var path = require('path');
 var _ = require('lodash');
 var $ = require('jquery');
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Row = require('react-bootstrap').Row;
@@ -15,7 +18,7 @@ var FormValidationMixin = require('../../../shared/mixins/components/form_valida
 var session = require('../../session/models/session');
 
 var PaymentCreate = React.createClass({
-  mixins: [FormValidationMixin],
+  mixins: [IntlMixin, FormValidationMixin],
 
   refNameTypeMap: {
     source_account_id: 'number',
@@ -32,7 +35,7 @@ var PaymentCreate = React.createClass({
   initialState: {
     disableForm: false,
     disableSubmitButton: true,
-    submitButtonLabel: 'Record Transaction'
+    submitButtonLabel: 'transactionFormSubmit1'
   },
 
   // list of custom event bindings and actions
@@ -70,7 +73,7 @@ var PaymentCreate = React.createClass({
     this.setState({
       disableForm: false,
       disableSubmitButton: false,
-      submitButtonLabel: 'Re-Submit Transaction?',
+      submitButtonLabel: 'transactionFormSubmit2'
     });
   },
 
@@ -82,7 +85,7 @@ var PaymentCreate = React.createClass({
 
     this.setState({
       disableForm: true,
-      submitButtonLabel: 'Recording Transaction...',
+      submitButtonLabel: 'transactionFormSubmit3'
     });
 
     // standard submit action - sendPaymentAttempt, flagAsDoneWithEdits, flagAsInvoicePaid
@@ -101,7 +104,7 @@ var PaymentCreate = React.createClass({
   destinationOptions: '',
 
   buildAccountOptions: function(accounts) {
-    return _.map(accounts, function(account) {
+    return _.map(accounts, account => {
       return (
         <option key={account.id} value={account.id}>{account.name} - {account.uid}</option>
       );
@@ -111,33 +114,31 @@ var PaymentCreate = React.createClass({
   // TODO - use accountsActions with dispatcher to fetch accounts collection
   // listen to sync on instantiated account collection
   fetchAccounts: function() {
-    var _this = this;
-
     $.ajax({
       type: 'GET',
       url: path.join(session.get('gatewaydUrl'), 'v1/external_accounts'),
-      beforeSend: function (xhr) {
+      beforeSend: xhr => {
         xhr.setRequestHeader ('Authorization', session.get('credentials'));
       }
-    }).done(function(data) {
+    }).done(data => {
       data = data.external_accounts;
 
-      if (_this.props.model.get('deposit')) {
+      if (this.props.model.get('deposit')) {
 
         // bank to ripple transactions always use gateway account as the destination
-        _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'acct'}));
-        _this.destinationOptions = _this.buildAccountOptions(_.where(data, {type: 'gateway'}));
+        this.sourceOptions = this.buildAccountOptions(_.where(data, {type: 'acct'}));
+        this.destinationOptions = this.buildAccountOptions(_.where(data, {type: 'gateway'}));
       } else {
 
         // ripple to bank transactions always use gateway account as the source
-        _this.sourceOptions = _this.buildAccountOptions(_.where(data, {type: 'gateway'}));
-        _this.destinationOptions = _this.buildAccountOptions(_.where(data, {type: 'acct'}));
+        this.sourceOptions = this.buildAccountOptions(_.where(data, {type: 'gateway'}));
+        this.destinationOptions = this.buildAccountOptions(_.where(data, {type: 'acct'}));
       }
 
-      _this.setState({
+      this.setState({
         disableSubmitButton: false
       });
-    }).fail(function(jqHXR, status) {
+    }).fail((jqHXR, status) => {
       console.warn('Account Fetch Failed:', status);
     });
   },
@@ -194,12 +195,20 @@ var PaymentCreate = React.createClass({
     this.props.onRequestHide();
   },
 
+  getSubmitButton: function(state) {
+    if (!state) {
+      return false;
+    }
+
+    return <FormattedMessage message={this.getIntlMessage(state)}/>;
+  },
+
   displayNewPaymentButton: function() {
     return (
       <Button className="pull-right" bsStyle="primary" bsSize="large" type="submit"
         disabled={this.state.disableForm || this.state.disableSubmitButton}
         block>
-        {this.state.submitButtonLabel}
+        {this.getSubmitButton(this.state.submitButtonLabel)}
       </Button>
     );
   },
@@ -209,7 +218,7 @@ var PaymentCreate = React.createClass({
       <div className="modal-footer">
         <div className="col-sm-12 col-sm-offset-1 col-xs-12 col-xs-offset-1">
           <h4>
-            Did the transaction complete as intended?
+            <FormattedMessage message={this.getIntlMessage('transactionConfirmHeader')} />
           </h4>
         </div>
         <div className="col-sm-12 col-sm-offset-2 col-xs-12 col-xs-offset-1">
@@ -219,17 +228,20 @@ var PaymentCreate = React.createClass({
               bsSize="large"
               type="submit"
             >
-              <span className="glyphicon glyphicon-thumbs-up" /> Succeeded
+              <span className="glyphicon glyphicon-thumbs-up" />&nbsp;
+              <FormattedMessage message={this.getIntlMessage('transactionFormSucceeded')} />
             </Button>
             <Button
               bsStyle="danger"
               bsSize="large"
               onClick={this.handleSecondarySubmit}
             >
-              <span className="glyphicon glyphicon-thumbs-down" /> Failed
+              <span className="glyphicon glyphicon-thumbs-down" />&nbsp;
+              <FormattedMessage message={this.getIntlMessage('transactionFormFailed')} />
             </Button>
             <a onClick={this.hideForm}>
-              <span> cancel</span>
+              &nbsp;
+              <FormattedMessage message={this.getIntlMessage('transactionFormCancel')} />
             </a>
           </ButtonToolbar>
         </div>

@@ -1,6 +1,9 @@
 "use strict";
 
 var _ = require('lodash');
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var paymentCreateFormModel = require('../models/payment-create');
@@ -8,8 +11,11 @@ var PaymentCreateForm = require('./payment-create-form.jsx');
 var paymentActions = require('../actions');
 
 var PaymentCreateModal = React.createClass({
+
+  mixins: [IntlMixin],
+
   propTypes: {
-    title: React.PropTypes.string,
+    titleKey: React.PropTypes.string,
     formType: React.PropTypes.string,
     submitActions: React.PropTypes.array,
     model: React.PropTypes.object // optional
@@ -34,7 +40,7 @@ var PaymentCreateModal = React.createClass({
   render: function() {
     return (
       <Modal
-        title={this.props.title}
+        title={this.getIntlMessage(this.props.titleKey)}
         backdrop={true}
         onRequestHide={this.hideForm}
         animation={false}

@@ -1,5 +1,8 @@
 "use strict";
 
+var ReactIntl = require('react-intl');
+var IntlMixin = ReactIntl.IntlMixin;
+var FormattedMessage = ReactIntl.FormattedMessage;
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
@@ -9,22 +12,23 @@ var Link = Router.Link;
 
   [
     {
-      text: "Login"
+      key: "Login"
       href: "/login"
     },
     {
-      text: "Main"
+      key: "Main"
       href: "/"
     },
     {
-      text: "Logout"
+      key: "Logout"
       href: "/logout"
     }
   ]
 */
 
 var NavLinks = React.createClass({
-  mixins: [Router.State],
+
+  mixins: [IntlMixin, Router.State],
 
   propTypes: {
     links: React.PropTypes.array,
@@ -37,21 +41,28 @@ var NavLinks = React.createClass({
     };
   },
 
+  getFormattedString: function(key) {
+    if (!key) {
+      return false;
+    }
+
+    return <FormattedMessage message={this.getIntlMessage(key)} />;
+  },
+
   getLinks: function(links) {
-    var _this = this;
     var items;
 
-    items = links.map(function(link, i) {
+    items = links.map((link, i) => {
       var activeClassState = '';
 
-      if (_this.isActive(link.href.split('/')[1])) {
+      if (this.isActive(link.href.split('/')[1])) {
         activeClassState = 'active';
       }
 
       return (
         <li key={i++}>
           <Link to={link.href} className={activeClassState}>
-            {link.text}
+            {this.getFormattedString(link.key)}
           </Link>
         </li>
       );
