@@ -32,7 +32,7 @@ var AccountDetailContent = React.createClass({
         <div className="row border-bottom">
           <div className="col-sm-4 col-xs-12">
             <FormattedMessage message={this.getIntlMessage('accountUpdated')} />
-            {moment(model.updatedAt).format('MMM D, YYYY HH:mm z')}
+            {moment(model.updatedAt).format('MMM D, YYYY HH:mm:ss.SSS z')}
             <br />
           </div>
         </div>

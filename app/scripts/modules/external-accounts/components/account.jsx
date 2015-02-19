@@ -96,7 +96,7 @@ var Account = React.createClass({
         <div className="row">
           <div className="col-sm-10 col-xs-12">
             <span className="date pull-left">
-              {moment(model.createdAt).format('MMM D, YYYY HH:mm z')}
+              {moment(model.createdAt).format('MMM D, YYYY HH:mm:ss.SSS z')}
             </span>
           </div>
           <div className="col-sm-2 col-xs-12">

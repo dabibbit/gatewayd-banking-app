@@ -105,7 +105,7 @@ var Payments = Backbone.Collection.extend({
   },
 
   getNewExternalTransactionsUrl: function(updatedAt) {
-    var timeStamp = encodeURIComponent(moment(updatedAt).format('YYYY-MM-DD HH:mm:ss.ms'));
+    var timeStamp = encodeURIComponent(moment(updatedAt).format('YYYY-MM-DD HH:mm:ss.SSS'));
 
     return this.url + '?count=200' + '&sort_direction=asc' + '&index=' + timeStamp;
   },

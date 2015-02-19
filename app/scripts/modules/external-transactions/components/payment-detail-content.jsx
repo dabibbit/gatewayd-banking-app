@@ -21,7 +21,7 @@ var PaymentDetailContent = React.createClass({
     return (
       <div className={this.props.paymentDetailClassName}>
         <div className="row border-bottom">
-          Updated {moment(model.updatedAt).format('MMM D, YYYY HH:mm z')}
+          Updated {moment(model.updatedAt).format('MMM D, YYYY HH:mm:ss.SSS z')}
         </div>
         <br />
         <div className="row">
