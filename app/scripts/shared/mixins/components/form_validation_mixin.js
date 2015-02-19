@@ -58,7 +58,9 @@ var FormValidationMixin = {
   },
 
   formatInput: function(rawInputRef, type) {
-    var formattedInput = rawInputRef.getValue().trim();
+
+    //selects now return array.
+    var formattedInput = rawInputRef.getValue().toString().trim();
 
     if (!formattedInput) {
       return null;
