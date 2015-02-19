@@ -58,7 +58,14 @@ var FormValidationMixin = {
   },
 
   formatInput: function(rawInputRef, type) {
-    var formattedInput = rawInputRef.getValue().trim();
+    var formattedInput = rawInputRef.getValue();
+
+    if (!_.isString(formattedInput)) {
+      console.log("this validation method requires typeOf string");
+      return null;
+    } else {
+      formattedInput = formattedInput.trim();
+    }
 
     if (!formattedInput) {
       return null;

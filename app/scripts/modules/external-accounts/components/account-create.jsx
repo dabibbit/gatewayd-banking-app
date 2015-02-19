@@ -104,7 +104,6 @@ var AccountCreate = React.createClass({
               onBlur={this.validateField.bind(this, type.refName)}
               onChange={this.handleChange.bind(this, type.refName)}
               hasFeedback
-              multiple
               autofocus={true}
             >
               <option value="acct">Customer</option>
