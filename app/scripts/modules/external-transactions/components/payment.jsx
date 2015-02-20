@@ -129,12 +129,7 @@ var Payment = React.createClass({
 
     //todo - clean all this up. This abstraction is messy here
     //model.deposit, true === deposits, false === withdrawals
-    var typeMap = {
-      true: 'deposits',
-      false: 'withdrawals'
-    };
-
-    var transactionType = typeMap[model.deposit];
+    var transactionType = model.deposit ? 'deposits' : 'withdrawals';
 
     if (transactionType === 'deposits') {
       accountName = model.fromAccount ? model.fromAccount.name : null;
